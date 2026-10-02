@@ -1,181 +1,524 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
-
+<html lang="id" data-bs-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yoksipmksi | Project Hub</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nama Kamu — Portofolio</title>
 
+<!-- Terapkan tema tersimpan sebelum halaman tampil (mencegah kedip) -->
+<script>
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('tema'); } catch (e) {}
+    if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-bs-theme', t);
+  })();
+</script>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ---------- TEMA: putih (terang) & biru navy (gelap) ---------- */
+  [data-bs-theme="light"] {
+    --bs-body-bg: #ffffff;
+    --bs-body-color: #0b1b3d;
+    --muted: #55627f;
+    --accent: #14307a;
+    --accent-ink: #ffffff;
+    --line: #dde3f0;
+    --bar-bg: transparent;
+    --pill-bg: #ffffff;
+    --shadow: 0 4px 14px rgba(11, 27, 61, .1);
+  }
+  [data-bs-theme="dark"] {
+    --bs-body-bg: #0a0c21;
+    --bs-body-color: #e8ebfa;
+    --muted: #9aa3c7;
+    --accent: #8aa2ff;
+    --accent-ink: #0a0c21;
+    --line: #20264d;
+    --bar-bg: transparent;
+    --pill-bg: #141a3c;
+    --shadow: 0 4px 14px rgba(0, 0, 0, .45);
+  }
+
+  body { transition: background-color .3s, color .3s; }
+  h1, .brand { font-family: "Bricolage Grotesque", system-ui, sans-serif; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
+
+  /* ---------- TOPBAR (auto-hide) ---------- */
+  .hot-zone { position: fixed; inset: 0 0 auto 0; height: 28px; z-index: 1049; }
+
+  /* latar blur selebar layar di belakang semua elemen navbar */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1050;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;   /* kiri | tengah | kanan */
+    align-items: center;
+    gap: .75rem;
+    padding: .75rem clamp(.75rem, 3vw, 2rem);
+    background: var(--bar-bg);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid var(--line);
+    transition: transform .4s cubic-bezier(.2, .8, .2, 1), opacity .3s;
+  }
+  .topbar.is-hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+  /* saat hero mode hacker ada di belakang navbar, warna navbar ikut hijau */
+  .topbar[data-over="hack"] {
+    --bs-body-color: #d3f9e2; --muted: #7fbf9f; --line: rgba(74, 222, 128, .22);
+    --pill-bg: #0a2216; --shadow: 0 4px 14px rgba(0, 0, 0, .4);
+  }
+
+  .pill {
+    background: var(--pill-bg);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+  }
+
+  /* kiri: nama */
+  .brand {
+    justify-self: start;
+    padding: .55rem 0;
+    font-weight: 700;
+    color: var(--bs-body-color);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  /* tengah: menu */
+  .nav-pill { display: flex; gap: .15rem; padding: .35rem; margin: 0; list-style: none; }
+  .nav-pill a {
+    display: block;
+    padding: .45rem 1rem;
+    border-radius: 999px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: .95rem;
+    transition: background .2s, color .2s;
+  }
+  .nav-pill a:hover { background: var(--line); color: var(--bs-body-color); }
+
+  /* kanan: tombol tema */
+  .theme-btn {
+    justify-self: end;
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    padding: 0;
+    color: var(--bs-body-color);
+    cursor: pointer;
+  }
+  .theme-btn:hover { background: var(--line); }
+  .theme-btn svg { width: 20px; height: 20px; }
+  [data-bs-theme="light"] .icon-sun,
+  [data-bs-theme="dark"] .icon-moon { display: none; }
+
+  @media (max-width: 575.98px) {
+    .nav-pill a { padding: .4rem .6rem; font-size: .85rem; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    --mode: var(--accent); --mode-ink: var(--accent-ink); --glow: rgba(120, 130, 255, .4);
+    min-height: 100svh; display: flex; align-items: center;
+    padding-block: 6.5rem 3rem; position: relative; overflow: hidden;
+  }
+  .hero { color: var(--bs-body-color); background-color: var(--bs-body-bg); transition: background-color .5s, color .5s; }
+  /* mode hacker: seluruh hero jadi hijau gelap berpola grid (di tema terang maupun gelap) */
+  .hero[data-mode="hack"] {
+    --mode: #4ade80; --mode-ink: #052e16; --glow: rgba(74, 222, 128, .28);
+    --bs-body-color: #d3f9e2; --muted: #7fbf9f; --line: rgba(74, 222, 128, .22);
+    --pill-bg: #0a2216; --shadow: 0 4px 14px rgba(0, 0, 0, .4);
+    background-color: #04130c;
+    background-image: linear-gradient(rgba(74, 222, 128, .07) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(74, 222, 128, .07) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  .hero[data-mode="hack"] .dock a::after { background: #d3f9e2; color: #04130c; }
+
+  /* aksen teks: ungu (developer) / hijau (hacker) */
+  [data-bs-theme="light"] .hero { --hl: #6d28d9; }
+  [data-bs-theme="dark"] .hero { --hl: #9b6bff; }
+  .hero[data-mode="hack"] { --hl: var(--mode); }
+  .hero::after {
+    content: ""; position: absolute; left: -10%; bottom: -18%;
+    width: min(520px, 70vw); aspect-ratio: 1; border-radius: 50%;
+    background: radial-gradient(closest-side, var(--glow), transparent); pointer-events: none;
+  }
+
+  /* kartu statistik berlatar blur */
+  .stat {
+    display: flex; align-items: center; gap: .9rem; height: 100%; padding: .9rem 1.1rem; border-radius: 20px;
+    background: color-mix(in srgb, var(--bs-body-color) 6%, transparent);
+    border: 1px solid var(--line);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  }
+  .stat i {
+    display: grid; place-items: center; flex: none; width: 44px; height: 44px;
+    border-radius: 13px; color: var(--hl);
+    background: color-mix(in srgb, var(--hl) 16%, transparent);
+  }
+  .stat .num { font-family: "Poppins", system-ui, sans-serif; font-weight: 700; line-height: 1.1; }
+  .stat .lbl { color: var(--muted); margin-top: .15rem; }
+  .stat { transition: transform .25s ease, border-color .25s, box-shadow .25s; }
+  .stat:hover {
+    transform: translateY(-3px) scale(1.03);
+    border-color: color-mix(in srgb, var(--hl) 55%, transparent);
+    box-shadow: 0 14px 30px -14px var(--glow);
+  }
+
+  /* badge di atas judul */
+  .badge-pill {
+    display: block; width: fit-content; padding: .4rem 1.1rem;
+    border-radius: 999px; font-family: "Poppins", system-ui, sans-serif; font-weight: 500; line-height: 1.4; color: var(--hl);
+    background: color-mix(in srgb, var(--hl) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--hl) 35%, transparent);
+  }
+  .hero::before {
+    content: ""; position: absolute; right: -8%; top: 12%;
+    width: min(620px, 80vw); aspect-ratio: 1; border-radius: 50%;
+    background: radial-gradient(closest-side, var(--glow), transparent);
+    pointer-events: none;
+  }
+  .hero .container { position: relative; }
+  .hero h1, .hero .role, .hero .lead { font-family: "Poppins", system-ui, sans-serif; }
+  .hero h1 { font-weight: 700; letter-spacing: -.025em; line-height: 1.1; }
+  .hero .role { color: var(--hl); font-weight: 700; letter-spacing: -.015em; line-height: 1.25; }
+  .hero .lead { color: color-mix(in srgb, var(--bs-body-color) 80%, transparent); max-width: 46ch; font-weight: 400; line-height: 1.9; }
+
+  /* tombol tab */
+  .controls {
+    display: flex; width: fit-content; flex-wrap: wrap; align-items: center; justify-content: center;
+    gap: .5rem; max-width: 100%; border-radius: 28px;
+  }
+  .tabs { display: flex; gap: .25rem; }
+  .vsep { width: 1px; align-self: stretch; margin-block: .45rem; background: var(--line); }
+  @media (max-width: 575.98px) { .vsep { display: none; } }
+  .tabs button {
+    border: 0; background: transparent; color: var(--muted); cursor: pointer;
+    padding: .5rem 1rem; border-radius: 999px; font-weight: 500;
+    display: inline-flex; align-items: center; gap: .5rem;
+    transition: background .25s, color .25s;
+  }
+  .tabs button:not([aria-selected="true"]):hover { color: var(--bs-body-color); }
+  .tabs button[aria-selected="true"] { background: var(--mode); color: var(--mode-ink); }
+
+  /* dock medsos: ikon membesar mengikuti kursor */
+  .dock { display: flex; align-items: center; gap: .4rem; list-style: none; padding: 0 .25rem; margin: 0; }
+  .dock a {
+    --s: 1; position: relative;
+    display: grid; place-items: center; width: 44px; height: 44px;
+    border-radius: 16px; border: 1px solid var(--line);
+    color: var(--bs-body-color); text-decoration: none;
+    transform: scale(var(--s)); transform-origin: 50% 100%;
+    transition: transform .12s ease-out, background .2s, color .2s, border-color .2s;
+  }
+  .dock a:hover, .dock a:focus-visible { background: var(--mode); border-color: var(--mode); color: var(--mode-ink); }
+  .dock a::after {
+    content: attr(data-tip);
+    position: absolute; bottom: calc(100% + 8px); left: 0; right: 0; margin-inline: auto; width: max-content;
+    padding: .2rem .6rem; border-radius: 8px; font-size: .75rem;
+    background: var(--bs-body-color); color: var(--bs-body-bg);
+    opacity: 0; pointer-events: none; transition: opacity .15s;
+    transform: scale(calc(1 / var(--s))); transform-origin: 50% 100%;
+  }
+  .dock a:hover::after, .dock a:focus-visible::after { opacity: 1; }
+
+  /* card kanan */
+  .win {
+    --card: #0c1030;
+    border: 1.5px solid transparent; border-radius: 28px; overflow: hidden;
+    background: linear-gradient(var(--card), var(--card)) padding-box,
+                linear-gradient(140deg, var(--mode), #a855f7 70%, transparent) border-box;
+    box-shadow: 0 30px 60px -20px rgba(5, 8, 30, .6), 0 0 60px -10px var(--glow);
+    color: #dbe3ff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .88rem;
+  }
+  .win-bar { display: flex; align-items: center; gap: .75rem; padding: .8rem 1.1rem; border-bottom: 1px solid rgba(255, 255, 255, .08); color: #8c97c4; font-size: .8rem; }
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; }
+  .dots i:nth-child(2) { background: #febc2e; }
+  .dots i:nth-child(3) { background: #28c840; }
+  .panel { padding: 1.1rem 1.25rem 0; min-height: 21rem; display: flex; flex-direction: column; }
+  .panel[hidden] { display: none; }
+  .code { flex: 1; }
+  .l { display: block; white-space: pre-wrap; line-height: 1.75; }
+  #panel-dev .code { counter-reset: ln; }
+  #panel-dev .l { counter-increment: ln; }
+  #panel-dev .l::before { content: counter(ln); display: inline-block; width: 1.6rem; margin-right: 1rem; text-align: right; color: #4b5688; }
+  .panel.play .l { animation: line-in .35s both; animation-delay: calc(var(--i) * 70ms); }
+  @keyframes line-in { from { opacity: 0; transform: translateX(-8px); } }
+  .k { color: #c792ea; } .s { color: #a5e8a0; } .n { color: #ffb86c; } .p { color: #82aaff; } .c { color: #5b678f; font-style: italic; }
+  .o { color: #f07178; } .g { color: #4ade80; } .d { color: #8c97c4; } .pr { color: #4ade80; }
+  .cur::after { content: ""; display: inline-block; width: .55em; height: 1.1em; margin-left: 2px; background: #4ade80; vertical-align: text-bottom; animation: blink 1s steps(2) infinite; }
+  @keyframes blink { to { opacity: 0; } }
+  .pfoot { display: flex; justify-content: space-between; align-items: center; margin: 1rem -1.25rem 0; padding: .75rem 1.25rem; border-top: 1px solid rgba(255, 255, 255, .08); font-size: .78rem; color: #8c97c4; }
+  .live::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: .5rem; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+
+  /* mode hacker: card serba hijau */
+  .hero[data-mode="hack"] .win {
+    --card: #04130c;
+    background: linear-gradient(var(--card), var(--card)) padding-box,
+                linear-gradient(140deg, #4ade80, #14b8a6 70%, transparent) border-box;
+    box-shadow: 0 30px 60px -20px rgba(0, 20, 10, .7), 0 0 60px -10px rgba(74, 222, 128, .35);
+    color: #c9f7dc;
+  }
+  .hero[data-mode="hack"] .win-bar,
+  .hero[data-mode="hack"] .pfoot { color: #5fae85; border-color: rgba(74, 222, 128, .15); }
+  .hero[data-mode="hack"] .l.d { color: #6fb592; }
+  .hero[data-mode="hack"] .o { color: #fb7185; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panel.play .l, .cur::after { animation: none; }
+    .dock a, .stat { transition: none; }
+    .stat:hover { transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .topbar, body { transition: none; }
+  }
+</style>
 </head>
+<body>
 
-<body class="bg-body-tertiary text-body">
+<div class="hot-zone" id="hotZone" aria-hidden="true"></div>
 
-    <nav class="navbar navbar-expand-lg fixed-top glass-nav border-bottom">
-        <div class="container">
-            <a class="navbar-brand fw-bold fs-4" href="#">
-                <span class="text-primary">&lbrace;</span> yoksipmksi <span class="text-primary">&rbrace;</span>
-            </a>
-            <div class="d-flex align-items-center gap-3">
-                <a href="https://github.com/yoksipmksi" target="_blank" class="text-body fs-4"><i
-                        class="bi bi-github"></i></a>
-                <button id="themeToggle"
-                    class="btn bg-body-secondary border rounded-circle d-flex align-items-center justify-content-center shadow-sm"
-                    style="width: 42px; height: 42px">
-                    <i class="bi bi-sun-fill"></i>
-                </button>
-            </div>
+<header class="topbar" id="topbar">
+  <a class="brand fs-5" href="#beranda">Nama Kamu</a>
+
+  <nav aria-label="Navigasi utama">
+    <ul class="nav-pill pill">
+      <li><a href="#beranda">Beranda</a></li>
+      <li><a href="#tentang">Tentang</a></li>
+      <li><a href="#proyek">Proyek</a></li>
+      <li><a href="#kontak">Kontak</a></li>
+    </ul>
+  </nav>
+
+  <button class="theme-btn pill" id="themeBtn" type="button" aria-label="Ganti tema">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+    </svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+    </svg>
+  </button>
+</header>
+
+<main>
+  <section class="hero" id="beranda" data-mode="dev">
+    <div class="container">
+      <div class="row align-items-center gx-5 gy-4">
+
+        <div class="col-lg-6">
+          <span class="badge-pill small mb-3">Creative Portofolio</span>
+          <h1 class="display-3 mb-1">Nama Kamu</h1>
+          <p class="role fs-3 mb-2">Developer di siang hari, hacker di malam hari.</p>
+          <p class="lead fs-6 mb-0">Saya membangun aplikasi web dan mengujinya sebelum orang lain sempat. Pilih sisi di bawah untuk melihat cara kerja saya.</p>
+
+          <div class="controls pill mt-4 p-2">
+            <div class="tabs d-none d-md-flex" role="tablist" aria-label="Pilih sisi">
+            <button type="button" role="tab" id="tab-dev" data-mode="dev" aria-selected="true" aria-controls="panel-dev"><i class="bi bi-code-slash"></i> Developer</button>
+            <button type="button" role="tab" id="tab-hack" data-mode="hack" aria-selected="false" aria-controls="panel-hack" tabindex="-1"><i class="bi bi-terminal"></i> Hacker</button>
+          </div>
+            <span class="vsep d-none d-md-block" aria-hidden="true"></span>
+            <ul class="dock" id="dock" aria-label="Media sosial">
+              <li><a class="fs-5" href="https://github.com/username" target="_blank" rel="noopener" data-tip="GitHub" aria-label="GitHub"><i class="bi bi-github"></i></a></li>
+              <li><a class="fs-5" href="https://instagram.com/username" target="_blank" rel="noopener" data-tip="Instagram" aria-label="Instagram"><i class="bi bi-instagram"></i></a></li>
+              <li><a class="fs-5" href="https://linkedin.com/in/username" target="_blank" rel="noopener" data-tip="LinkedIn" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a></li>
+              <li><a class="fs-5" href="https://tiktok.com/@username" target="_blank" rel="noopener" data-tip="TikTok" aria-label="TikTok"><i class="bi bi-tiktok"></i></a></li>
+              <li><a class="fs-5" href="mailto:email@kamu.com" data-tip="Email" aria-label="Email"><i class="bi bi-envelope-fill"></i></a></li>
+            </ul>
+          </div>
         </div>
-    </nav>
 
-    <header class="py-3 mt-5">
-        <div class="container pt-5 text-center">
-            <div class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill mb-3">
-                GitHub Repository Hub
+        <div class="col-lg-6 d-none d-md-block">
+          <div class="win">
+            <div class="win-bar">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span id="winTitle">dev.js</span>
             </div>
-            <h1 class="display-3 fw-800 mb-3 text-gradient">My Project Universe</h1>
-            <p class="lead text-secondary mx-auto" style="max-width: 600px;">
-                Kumpulan repositori dan karya pengembangan website yang sedang saya kerjakan di GitHub.
-            </p>
-            <div class="d-flex justify-content-center gap-3">
-                <a href="https://github.com/yoksipmksi" target="_blank"
-                    class="btn btn-primary btn-lg px-4 py-1 rounded-pill fw-bold shadow-sm d-flex align-items-center border-3 border-primary">
-                    <i class="bi bi-github me-2 fs-4"></i> Lihat & Ikuti Profil GitHub Saya
-                </a>
+
+            <div class="panel" id="panel-dev" role="tabpanel" aria-labelledby="tab-dev">
+              <div class="code">
+                <span class="l c">// tentang saya</span>
+                <span class="l"><span class="k">const</span> <span class="p">dev</span> = {</span>
+                <span class="l">  <span class="p">nama</span>: <span class="s">"Nama Kamu"</span>,</span>
+                <span class="l">  <span class="p">peran</span>: <span class="s">"Web Developer"</span>,</span>
+                <span class="l">  <span class="p">stack</span>: [<span class="s">"PHP"</span>, <span class="s">"JavaScript"</span>, <span class="s">"MySQL"</span>],</span>
+                <span class="l">  <span class="p">tools</span>: [<span class="s">"Git"</span>, <span class="s">"Bootstrap"</span>, <span class="s">"Tailwind"</span>],</span>
+                <span class="l">  <span class="p">lokasi</span>: <span class="s">"Kota, Indonesia"</span>,</span>
+                <span class="l">  <span class="p">bukaPeluang</span>: <span class="n">true</span>,</span>
+                <span class="l">};</span>
+                <span class="l">&nbsp;</span>
+                <span class="l"><span class="p">dev</span>.<span class="o">hubungi</span>(); <span class="c">// klik ikon di bawah</span></span>
+              </div>
+              <div class="pfoot"><span class="live">Terbuka untuk magang &amp; freelance</span><span>JavaScript</span></div>
             </div>
-        </div>
-    </header>
 
-    <section class="py-5">
-        <div class="container">
-            <div class="row g-4">
-
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 project-card rounded-5 bg-body shadow-sm">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div class="bg-primary bg-opacity-10 p-3 rounded-4">
-                                    <i class="bi bi-code-slash fs-3 text-primary"></i>
-                                </div>
-                                <span
-                                    class="badge rounded-pill bg-body-secondary border text-body-secondary small">Main</span>
-                            </div>
-                            <h4 class="fw-bold">Workshop Informatika Semester 1</h4>
-                            <p class="text-secondary small mb-4">Kumpulan penugasan yang diberikan ketika acara workshop
-                                teknik informatika semester 1.</p>
-                            <div class="d-flex flex-wrap gap-2 mb-4">
-                                <span class="badge bg-body-tertiary text-secondary border px-2 py-1">HTML</span>
-                                <span class="badge bg-body-tertiary text-secondary border px-2 py-1">CSS</span>
-                                <span class="badge bg-body-tertiary text-secondary border px-2 py-1">JS</span>
-                                <span class="badge bg-body-tertiary text-secondary border px-2 py-1">Bootstrap</span>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <a href="https://yoksipmksi.github.io/tugas-workshop-ti-semester-1"
-                                        class="btn btn-primary border-2 rounded-pill w-100 fw-bold">
-                                        View Demo <i class="bi bi-arrow-up-right ms-1"></i>
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="https://github.com/yoksipmksi/tugas-workshop-ti-semester-1"
-                                        class="btn btn-outline-primary border-2 rounded-pill w-100 fw-bold">
-                                        Explore Repo <i class="bi bi-github ms-1"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 project-card rounded-5 bg-body shadow-sm">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div class="bg-success bg-opacity-10 p-3 rounded-4 text-success">
-                                    <i class="bi bi-filetype-exe fs-3"></i>
-                                </div>
-                                <span class="badge rounded-pill bg-body-secondary border text-body-secondary small">Repo
-                                    <span class="text-warning">(Beta)</span></span>
-
-                            </div>
-                            <h4 class="fw-bold">Algoritma Dasar Semester 1 UMPO</h4>
-                            <p class="text-secondary small mb-4">Repositori berisi kegiatas praktikum pemrograman
-                                fundamental selama 1 semester.</p>
-                            <div class="d-flex flex-wrap gap-2 mb-4">
-                                <span class="badge bg-body-tertiary text-secondary border px-2 py-1">C++</span>
-                            </div>
-                            <a href="https://github.com/yoksipmksi/algoritma-dasar-semester-1-umpo"
-                                class="btn btn-outline-primary border-2 rounded-pill w-100 fw-bold">
-                                Explore Repo <i class="bi bi-github ms-1"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 project-card rounded-5 bg-body shadow-sm border-dashed">
-                        <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center text-center opacity-75">
-                            <div class="rounded-circle border border-secondary border-2 d-flex align-items-center justify-content-center mb-3"
-                                style="width: 60px; height: 60px; border-style: dashed !important;">
-                                <i class="bi bi-plus-lg text-secondary fs-3"></i>
-                            </div>
-                            <h5 class="fw-bold text-secondary">Coming Soon</h5>
-                            <p class="text-secondary small">Proyek baru sedang dalam tahap pengembangan.</p>
-                        </div>
-                    </div>
-                </div>
-
+            <div class="panel" id="panel-hack" role="tabpanel" aria-labelledby="tab-hack" hidden>
+              <div class="code">
+                <span class="l"><span class="pr">$</span> whoami</span>
+                <span class="l g">nama_kamu</span>
+                <span class="l"><span class="pr">$</span> cat skill.txt</span>
+                <span class="l d">web-security · linux · python · ctf</span>
+                <span class="l"><span class="pr">$</span> nmap -sV portofolio.local</span>
+                <span class="l d">PORT     STATE   SERVICE</span>
+                <span class="l d">22/tcp   <span class="o">closed</span>  ssh</span>
+                <span class="l d">80/tcp   <span class="g">open</span>    http</span>
+                <span class="l d">443/tcp  <span class="g">open</span>    https</span>
+                <span class="l"><span class="pr">$</span> ./kolaborasi.sh</span>
+                <span class="l g cur">[+] akses diterima, siap bekerja sama</span>
+              </div>
+              <div class="pfoot"><span class="live">root@portfolio</span><span>zsh</span></div>
             </div>
+          </div>
         </div>
-    </section>
 
-    <footer class="py-5 border-top bg-body mt-5">
-        <div class="container text-center">
-            <p class="text-secondary mb-0 small">
-                &copy; 2025 <span class="fw-bold text-body">yoksipmksi</span>.
-            </p>
-        </div>
-    </footer>
+      </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      <div class="mt-5">
+      <div class="row row-cols-2 row-cols-lg-4 g-3">
+        <div class="col"><div class="stat"><i class="bi bi-folder2-open fs-5"></i><div><div class="num fs-3"><span data-count="12">12</span>+</div><div class="lbl fs-6">Proyek selesai</div></div></div></div>
+        <div class="col"><div class="stat"><i class="bi bi-clock-history fs-5"></i><div><div class="num fs-3"><span data-count="2">2</span>+</div><div class="lbl fs-6">Tahun pengalaman</div></div></div></div>
+        <div class="col"><div class="stat"><i class="bi bi-stack fs-5"></i><div><div class="num fs-3"><span data-count="8">8</span></div><div class="lbl fs-6">Teknologi dikuasai</div></div></div></div>
+        <div class="col"><div class="stat"><i class="bi bi-award fs-5"></i><div><div class="num fs-3"><span data-count="5">5</span></div><div class="lbl fs-6">Sertifikat &amp; lomba</div></div></div></div>
+      </div>
+      </div>
+    </div>
+  </section>
+</main>
 
-    <script>
-        const toggle = document.getElementById("themeToggle");
-        const html = document.documentElement;
+<script>
+(() => {
+  const root = document.documentElement;
+  const bar = document.getElementById('topbar');
+  const hotZone = document.getElementById('hotZone');
+  const themeBtn = document.getElementById('themeBtn');
+  const canHover = window.matchMedia('(hover: hover)').matches;
+  const TOP_EDGE = 40;    // px dari atas layar yang memicu bar muncul
+  const MIN_SCROLL = 80;  // bar baru boleh hilang setelah scroll sejauh ini
+  let lastY = window.scrollY;
+  let hideTimer;
+  let hovering = false;   // true selama kursor berada di atas navbar
 
-        // Sync icon with current theme
-        const updateIcon = (theme) => {
-            toggle.innerHTML = theme === 'dark'
-                ? '<i class="bi bi-sun-fill text-warning"></i>'
-                : '<i class="bi bi-moon-stars-fill"></i>';
-        };
+  /* ----- Auto-hide ----- */
+  const show = () => { clearTimeout(hideTimer); bar.classList.remove('is-hidden'); };
+  const hide = () => {
+    if (hovering) return;   // jangan hilang selagi kursor masih di navbar
+    if (window.scrollY > MIN_SCROLL) bar.classList.add('is-hidden');
+  };
 
-        // Initialize icon
-        updateIcon(html.getAttribute('data-bs-theme'));
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y <= MIN_SCROLL) show();
+    else if (y > lastY) hide();
+    else if (!canHover) show();      // layar sentuh: muncul saat scroll ke atas
+    lastY = y;
+  }, { passive: true });
 
-        toggle.onclick = () => {
-            const currentTheme = html.getAttribute("data-bs-theme");
-            const newTheme = currentTheme === "light" ? "dark" : "light";
+  hotZone.addEventListener('mouseenter', show);
+  document.addEventListener('mousemove', e => { if (e.clientY <= TOP_EDGE) show(); });
+  bar.addEventListener('mouseenter', () => { hovering = true; show(); });
+  bar.addEventListener('mouseleave', () => {
+    hovering = false;
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(hide, 700);   // hilang setelah kursor pergi
+  });
+  bar.addEventListener('focusin', show);
 
-            html.setAttribute("data-bs-theme", newTheme);
-            updateIcon(newTheme);
+  /* ----- Tema gelap / terang ----- */
+  const updateLabel = () => {
+    const dark = root.getAttribute('data-bs-theme') === 'dark';
+    themeBtn.setAttribute('aria-label', dark ? 'Ganti ke tema terang' : 'Ganti ke tema gelap');
+  };
+  updateLabel();
 
-            // Simpan preferensi pengguna
-            localStorage.setItem('theme', newTheme);
-        };
+  themeBtn.addEventListener('click', () => {
+    const next = root.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-bs-theme', next);
+    try { localStorage.setItem('tema', next); } catch (e) {}
+    updateLabel();
+  });
+})();
+</script>
+<script>
+(() => {
+  const hero = document.getElementById('beranda');
+  const tabs = [...hero.querySelectorAll('[role="tab"]')];
+  const panels = { dev: document.getElementById('panel-dev'), hack: document.getElementById('panel-hack') };
+  const titles = { dev: 'dev.js', hack: 'zsh — root@portfolio' };
+  const title = document.getElementById('winTitle');
+  const bar = document.getElementById('topbar');
+  const syncBar = () => {   // navbar ikut hijau selama hero hacker masih di belakangnya
+    const over = hero.dataset.mode === 'hack' && hero.getBoundingClientRect().bottom > 70;
+    bar.dataset.over = over ? 'hack' : '';
+  };
+  window.addEventListener('scroll', syncBar, { passive: true });
 
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            html.setAttribute('data-bs-theme', savedTheme);
-            updateIcon(savedTheme);
-        }
-    </script>
+  Object.values(panels).forEach(p => p.querySelectorAll('.l').forEach((l, i) => l.style.setProperty('--i', i)));
+
+  function setMode(m) {
+    hero.dataset.mode = m;
+    tabs.forEach(t => {
+      const on = t.dataset.mode === m;
+      t.setAttribute('aria-selected', on);
+      t.tabIndex = on ? 0 : -1;
+    });
+    Object.entries(panels).forEach(([k, p]) => { p.hidden = k !== m; });
+    title.textContent = titles[m];
+    syncBar();
+    const p = panels[m];                       // putar ulang animasi baris
+    p.classList.remove('play'); void p.offsetWidth; p.classList.add('play');
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => setMode(t.dataset.mode));
+    t.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const n = tabs[(i + 1) % tabs.length];
+      n.focus(); setMode(n.dataset.mode);
+    });
+  });
+  setMode('dev');
+
+  const mobile = matchMedia('(max-width: 767.98px)');   // tab disembunyikan di mobile -> kembali ke developer
+  mobile.addEventListener('change', e => { if (e.matches) setMode('dev'); });
+
+  /* Angka statistik naik dari 0 */
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const to = +el.dataset.count, t0 = performance.now();
+      const tick = t => {
+        const k = Math.min((t - t0) / 1200, 1);
+        el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3)));
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      el.textContent = 0; requestAnimationFrame(tick);
+    });
+  }
+
+  /* Dock: ikon membesar sesuai jarak kursor */
+  const dock = document.getElementById('dock');
+  const items = [...dock.querySelectorAll('a')];
+  if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    dock.addEventListener('mousemove', e => items.forEach(a => {
+      const r = a.getBoundingClientRect();
+      const d = Math.abs(e.clientX - (r.left + r.width / 2));
+      a.style.setProperty('--s', 1 + .3 * Math.max(0, 1 - d / 90));
+    }));
+    dock.addEventListener('mouseleave', () => items.forEach(a => a.style.setProperty('--s', 1)));
+  }
+})();
+</script>
 </body>
-
 </html>
