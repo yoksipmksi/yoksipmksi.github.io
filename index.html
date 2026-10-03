@@ -94,14 +94,19 @@
   [data-bs-theme="light"] .icon-sun,
   [data-bs-theme="dark"] .icon-moon { display: none; }
 
-  @media (max-width: 575.98px) {
-    .nav-pill a { font-size: .85rem; }
+  /* mobile: baris atas = nama + tema, baris bawah = menu selebar layar */
+  @media (max-width: 767.98px) {
+    .topbar { grid-template-columns: 1fr auto; }
+    .topbar > nav { grid-column: 1 / -1; grid-row: 2; }
+    .topbar .nav-pill { width: 100%; justify-content: space-between; margin: 0 !important; }
+    .topbar .nav-pill li { flex: 1; }
+    .topbar .nav-pill a { text-align: center; }
   }
 
   /* ---------- HERO ---------- */
   .hero {
     --mode: var(--accent); --mode-ink: var(--accent-ink); --glow: rgba(120, 130, 255, .4);
-    padding-top: 6.5rem;
+    padding-top: 6.5rem; overflow-x: clip;
   }
   .hero { color: var(--bs-body-color); background-color: var(--bs-body-bg); transition: background-color .5s, color .5s; }
   /* mode hacker: seluruh hero jadi hijau gelap berpola grid (di tema terang maupun gelap) */
@@ -242,9 +247,9 @@
   }
 
   /* ---------- PROJECTS ---------- */
-  [data-bs-theme="light"] .projects { --hl: #6d28d9; }
-  [data-bs-theme="dark"] .projects { --hl: #9b6bff; }
-  .projects h2 { font-family: "Poppins", system-ui, sans-serif; letter-spacing: -.02em; }
+  [data-bs-theme="light"] .projects, [data-bs-theme="light"] .about { --hl: #6d28d9; --gr: #15803d; }
+  [data-bs-theme="dark"] .projects, [data-bs-theme="dark"] .about { --hl: #9b6bff; --gr: #4ade80; }
+  .projects h2, .about h2 { font-family: "Poppins", system-ui, sans-serif; letter-spacing: -.02em; }
   .eyebrow { color: var(--hl); letter-spacing: .08em; }
   .view-all { transition: background .2s; }
   .view-all:hover { background: var(--line); }
@@ -296,6 +301,49 @@
   }
   .reveal-ready .reveal.is-visible { opacity: 1; transform: none; }
 
+  /* ---------- TENTANG: dua sisi (ungu = developer, hijau = hacker) ---------- */
+  .about { overflow-x: clip; }
+  .about::before, .about::after { content: ""; position: absolute; width: min(480px, 70vw); aspect-ratio: 1; border-radius: 50%; pointer-events: none; }
+  .about::before { left: -12%; top: 4%; background: radial-gradient(closest-side, color-mix(in srgb, var(--hl) 35%, transparent), transparent); }
+  .about::after { right: -12%; bottom: 0; background: radial-gradient(closest-side, color-mix(in srgb, var(--gr) 30%, transparent), transparent); }
+  .glass {
+    background: color-mix(in srgb, var(--bs-body-color) 5%, transparent); border: 1px solid var(--line);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  }
+  .tl::before { content: ""; position: absolute; left: 5px; top: .4rem; bottom: .9rem; width: 2px; background: linear-gradient(var(--hl), var(--gr)); }
+  .tl li { --c: var(--hl); }
+  .tl li[data-side="hack"] { --c: var(--gr); }
+  .tl li::before {
+    content: ""; position: absolute; left: -1.5rem; top: .35rem; width: 12px; height: 12px; border-radius: 50%;
+    background: var(--c); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 22%, transparent);
+  }
+  .tl li[data-side="both"]::before { background: linear-gradient(135deg, var(--hl), var(--gr)); }
+
+  .filter button { background: transparent; color: var(--muted); transition: background .25s, color .25s; }
+  .filter button[aria-pressed="true"] { background: var(--bs-body-color); color: var(--bs-body-bg); }
+  .filter button[data-f="dev"][aria-pressed="true"] { background: var(--hl); color: var(--bs-body-bg); }
+  .filter button[data-f="hack"][aria-pressed="true"] { background: var(--gr); color: var(--bs-body-bg); }
+  .group-label { color: var(--muted); letter-spacing: .08em; }
+
+  .chip {
+    --c: var(--hl);
+    border: 1px solid var(--line); background: color-mix(in srgb, var(--bs-body-color) 5%, transparent);
+    transition: opacity .3s, transform .3s, border-color .2s;
+  }
+  .chip[data-side="hack"] { --c: var(--gr); }
+  .chip i { color: var(--c); }
+  .chip[data-side="both"] i { background: linear-gradient(135deg, var(--hl), var(--gr)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .chip:hover { border-color: var(--c); transform: translateY(-2px); }
+  .chip[data-side="both"]:hover { border-color: var(--hl); }
+  .stack[data-filter="dev"] .chip[data-side="hack"],
+  .stack[data-filter="hack"] .chip[data-side="dev"] { opacity: .2; transform: scale(.95); }
+
+  /* mobile: bar navbar dua baris lebih tinggi, jadi beri ruang lebih di atas */
+  @media (max-width: 767.98px) {
+    .hero { padding-top: 9.5rem; }
+    html { scroll-padding-top: 9.5rem; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .topbar, body { transition: none; }
@@ -306,7 +354,7 @@
 
 <div class="hot-zone position-fixed top-0 start-0 end-0" id="hotZone" aria-hidden="true"></div>
 
-<header class="topbar fixed-top d-grid align-items-center gap-3 py-2 px-3 px-md-5" id="topbar">
+<header class="topbar fixed-top d-grid align-items-center column-gap-3 row-gap-2 py-2 px-3 px-md-5" id="topbar">
   <a class="brand fw-bold text-decoration-none text-nowrap py-2 fs-5" href="#beranda">yoksipmksi</a>
 
   <nav aria-label="Navigasi utama">
@@ -318,14 +366,14 @@
     </ul>
   </nav>
 
-<button class="theme-btn pill d-flex align-items-center justify-content-center p-0 rounded-pill" id="themeBtn" type="button" aria-label="Ganti tema">
-  <i class="bi bi-sun-fill icon-sun fs-5 lh-1" aria-hidden="true"></i>
-  <i class="bi bi-moon-stars-fill icon-moon fs-5 lh-1" aria-hidden="true"></i>
-</button>
+  <button class="theme-btn pill d-flex align-items-center justify-content-center p-0 rounded-pill" id="themeBtn" type="button" aria-label="Ganti tema">
+    <i class="bi bi-sun-fill icon-sun fs-5 lh-1" aria-hidden="true"></i>
+    <i class="bi bi-moon-stars-fill icon-moon fs-5 lh-1" aria-hidden="true"></i>
+  </button>
 </header>
 
 <main>
-  <section class="hero d-flex align-items-center min-vh-100 pb-5 position-relative overflow-hidden" id="beranda" data-mode="dev">
+  <section class="hero d-flex align-items-center min-vh-100 pb-5 position-relative" id="beranda" data-mode="dev">
     <div class="container position-relative">
       <div class="row align-items-center gx-5 gy-4">
 
@@ -405,14 +453,69 @@
     </div>
   </section>
 
+  <section class="about position-relative py-5" id="tentang">
+    <div class="container position-relative">
+      <div class="reveal mb-4">
+        <p class="eyebrow small fw-semibold text-uppercase mb-1">Tentang Saya</p>
+        <h2 class="fs-1 fw-bold lh-1 mb-0">Dua Sisi, Satu Orang</h2>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-lg-5 reveal">
+          <div class="glass rounded-4 p-4 h-100">
+            <h3 class="fs-5 fw-bold mb-3">Latar Belakang</h3>
+            <p>Saya suka membangun sesuatu dari nol, lalu mengujinya sampai rusak. Dari situ saya belajar dua hal sekaligus: cara membuat aplikasi web, dan cara orang lain membobolnya.</p>
+            <p class="mb-0">Ganti paragraf ini dengan ceritamu: sekolah atau kampus, apa yang memulai minatmu, dan apa yang sedang kamu pelajari sekarang.</p>
+            <ol class="tl list-unstyled position-relative ps-4 mt-4 mb-0">
+              <li class="position-relative pb-3" data-side="dev"><span class="d-block fw-semibold">Mulai dari developer</span><span class="small text-body-secondary">Belajar HTML, CSS, dan PHP, lalu membangun proyek pertama dari nol.</span></li>
+              <li class="position-relative pb-3" data-side="hack"><span class="d-block fw-semibold">Mengenal sisi hacker</span><span class="small text-body-secondary">Penasaran bagaimana aplikasi dibobol, lalu belajar Linux, CTF, dan keamanan web.</span></li>
+              <li class="position-relative" data-side="both"><span class="d-block fw-semibold">Sekarang</span><span class="small text-body-secondary">Membangun aplikasi sambil mengujinya sendiri sebelum dirilis.</span></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="col-lg-7 reveal">
+          <div class="glass rounded-4 p-4 h-100">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+              <h3 class="fs-5 fw-bold mb-0">Tech Stack</h3>
+              <div class="filter pill rounded-pill d-flex gap-1 p-1" role="group" aria-label="Filter sisi">
+                <button class="px-3 py-1 rounded-pill border-0 small fw-medium" type="button" data-f="all" aria-pressed="true">Semua</button>
+                <button class="px-3 py-1 rounded-pill border-0 small fw-medium" type="button" data-f="dev" aria-pressed="false">Developer</button>
+                <button class="px-3 py-1 rounded-pill border-0 small fw-medium" type="button" data-f="hack" aria-pressed="false">Hacker</button>
+              </div>
+            </div>
+            <div class="stack" id="stack" data-filter="all">
+          <div class="mb-3">
+            <div class="group-label small fw-semibold text-uppercase mb-2">Bahasa Pemrograman</div>
+            <div class="d-flex flex-wrap gap-2"><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-filetype-php fs-6"></i>PHP</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-filetype-js fs-6"></i>JavaScript</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="both"><i class="bi bi-filetype-py fs-6"></i>Python</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-filetype-sql fs-6"></i>SQL</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-filetype-html fs-6"></i>HTML &amp; CSS</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-terminal fs-6"></i>Bash</span></div>
+          </div>
+          <div class="mb-3">
+            <div class="group-label small fw-semibold text-uppercase mb-2">Framework &amp; Library</div>
+            <div class="d-flex flex-wrap gap-2"><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-braces fs-6"></i>Framework PHP buatan sendiri</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-bootstrap fs-6"></i>Bootstrap</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-wind fs-6"></i>Tailwind CSS</span></div>
+          </div>
+          <div class="mb-3">
+            <div class="group-label small fw-semibold text-uppercase mb-2">Tools Harian</div>
+            <div class="d-flex flex-wrap gap-2"><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="both"><i class="bi bi-git fs-6"></i>Git &amp; GitHub</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-code-slash fs-6"></i>VS Code</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="both"><i class="bi bi-cpu fs-6"></i>Linux</span></div>
+          </div>
+          <div class="mb-3">
+            <div class="group-label small fw-semibold text-uppercase mb-2">Sisi Hacker</div>
+            <div class="d-flex flex-wrap gap-2"><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-hdd-network fs-6"></i>Nmap</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-bug fs-6"></i>Burp Suite</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-activity fs-6"></i>Wireshark</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-shield-lock fs-6"></i>OWASP Top 10</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-flag fs-6"></i>CTF</span></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="projects py-5" id="proyek">
     <div class="container">
       <div class="reveal d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
         <div>
-          <p class="eyebrow small fw-semibold text-uppercase mb-1">Featured Projects</p>
-          <h2 class="fs-1 fw-bold lh-1 mb-0">Selected Work</h2>
+          <p class="eyebrow small fw-semibold text-uppercase mb-1">Proyek Unggulan</p>
+          <h2 class="fs-1 fw-bold lh-1 mb-0">Karya Pilihan</h2>
         </div>
-        <a class="view-all pill rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2 text-decoration-none text-reset fw-medium small" href="#">View All Projects <i class="bi bi-arrow-up-right"></i></a>
+        <a class="view-all pill rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2 text-decoration-none text-reset fw-medium small" href="#">Lihat Semua Proyek <i class="bi bi-arrow-up-right"></i></a>
       </div>
 
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
@@ -422,7 +525,7 @@
             <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
               <div>
                 <div class="fw-semibold lh-sm">Web Absensi PKL</div>
-                <div class="cat small">Web Application</div>
+                <div class="cat small">Aplikasi Web</div>
               </div>
               <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
             </div>
@@ -434,7 +537,7 @@
             <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
               <div>
                 <div class="fw-semibold lh-sm">Framework PHP Custom</div>
-                <div class="cat small">Backend Framework</div>
+                <div class="cat small">Framework Backend</div>
               </div>
               <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
             </div>
@@ -446,7 +549,7 @@
             <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
               <div>
                 <div class="fw-semibold lh-sm">Nama Proyek 3</div>
-                <div class="cat small">Security Tool</div>
+                <div class="cat small">Alat Keamanan</div>
               </div>
               <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
             </div>
@@ -458,7 +561,7 @@
             <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
               <div>
                 <div class="fw-semibold lh-sm">Nama Proyek 4</div>
-                <div class="cat small">Web Design</div>
+                <div class="cat small">Desain Web</div>
               </div>
               <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
             </div>
@@ -470,7 +573,7 @@
             <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
               <div>
                 <div class="fw-semibold lh-sm">Nama Proyek 5</div>
-                <div class="cat small">Mobile App</div>
+                <div class="cat small">Aplikasi Mobile</div>
               </div>
               <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
             </div>
@@ -482,7 +585,7 @@
             <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
               <div>
                 <div class="fw-semibold lh-sm">Nama Proyek 6</div>
-                <div class="cat small">Web Application</div>
+                <div class="cat small">Aplikasi Web</div>
               </div>
               <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
             </div>
@@ -615,7 +718,7 @@
   }
 })();
 </script>
-<!-- <script>
+<script>
 /* Parallax scroll: glow hero + card kanan bergerak beda kecepatan, mockup proyek bergeser di dalam card */
 (() => {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -639,7 +742,7 @@
   addEventListener('resize', update);
   update();
 })();
-</script> -->
+</script>
 <script>
 /* Scroll reveal: card proyek muncul bertahap saat masuk layar */
 (() => {
@@ -657,6 +760,17 @@
   }, { threshold: .15, rootMargin: '0px 0px -6% 0px' });
 
   items.forEach(el => io.observe(el));
+})();
+</script>
+<script>
+/* Filter tech stack: sisi yang tidak dipilih meredup */
+(() => {
+  const stack = document.getElementById('stack');
+  const btns = [...document.querySelectorAll('.filter button')];
+  btns.forEach(b => b.addEventListener('click', () => {
+    stack.dataset.filter = b.dataset.f;
+    btns.forEach(x => x.setAttribute('aria-pressed', x === b));
+  }));
 })();
 </script>
 </body>
