@@ -1,0 +1,18 @@
+/* theme-toggle.css — Tombol ganti tema dan ikon matahari/bulan */
+
+/* kanan: tombol tema */
+.theme-btn {
+    justify-self: end;
+    width: 44px;
+    height: 44px;
+    color: var(--bs-body-color);
+}
+
+.theme-btn:hover {
+    background: var(--line);
+}
+
+[data-bs-theme="light"] .icon-sun,
+[data-bs-theme="dark"] .icon-moon {
+    display: none;
+}

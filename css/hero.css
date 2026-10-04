@@ -1,0 +1,111 @@
+/* hero.css — Hero: latar, mode hacker, badge, teks, glow */
+
+/* ---------- HERO ---------- */
+.hero {
+  --mode: var(--accent);
+  --mode-ink: var(--accent-ink);
+  --glow: rgba(120, 130, 255, .4);
+  padding-top: 6.5rem;
+  overflow-x: clip;
+}
+
+.hero {
+  color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  transition: background-color .5s, color .5s;
+}
+
+/* mode hacker: seluruh hero jadi hijau gelap berpola grid (di tema terang maupun gelap) */
+.hero[data-mode="hack"] {
+  --mode: #4ade80;
+  --mode-ink: #052e16;
+  --glow: rgba(74, 222, 128, .28);
+  --bs-body-color: #d3f9e2;
+  --muted: #7fbf9f;
+  --line: rgba(74, 222, 128, .22);
+  --pill-bg: #0a2216;
+  --shadow: 0 4px 14px rgba(0, 0, 0, .4);
+  background-color: #04130c;
+  background-image: linear-gradient(rgba(74, 222, 128, .07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74, 222, 128, .07) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.hero[data-mode="hack"] .dock a::after {
+  background: #d3f9e2;
+  color: #04130c;
+}
+
+/* aksen teks: ungu (developer) / hijau (hacker) */
+[data-bs-theme="light"] .hero {
+  --hl: #6d28d9;
+}
+
+[data-bs-theme="dark"] .hero {
+  --hl: #9b6bff;
+}
+
+.hero[data-mode="hack"] {
+  --hl: var(--mode);
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  left: -10%;
+  bottom: -18%;
+  width: min(520px, 70vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate3d(0, calc(var(--sy, 0) * .3px), 0);
+  will-change: transform;
+  background: radial-gradient(closest-side, var(--glow), transparent);
+  pointer-events: none;
+}
+
+/* badge di atas judul */
+.badge-pill {
+  font-family: "Poppins", system-ui, sans-serif;
+  color: var(--hl);
+  background: color-mix(in srgb, var(--hl) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hl) 35%, transparent);
+}
+
+.hero-text {
+  transform: translateY(calc(var(--sy, 0) * .1px));
+  will-change: transform;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  right: -8%;
+  top: 12%;
+  width: min(620px, 80vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate3d(0, calc(var(--sy, 0) * .5px), 0);
+  will-change: transform;
+  background: radial-gradient(closest-side, var(--glow), transparent);
+  pointer-events: none;
+}
+
+.hero h1,
+.hero .role,
+.hero .lead {
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.hero h1 {
+  letter-spacing: -.025em;
+}
+
+.hero .role {
+  color: var(--hl);
+  letter-spacing: -.015em;
+}
+
+.hero .lead {
+  color: color-mix(in srgb, var(--bs-body-color) 80%, transparent);
+  max-width: 46ch;
+}

@@ -1,0 +1,5 @@
+/* footer.css — Bottom bar */
+
+.footer {
+    border-color: var(--line) !important;
+}

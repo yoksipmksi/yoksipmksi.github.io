@@ -1,0 +1,131 @@
+/* hero-card.css — Hero: card editor/terminal di kanan */
+
+/* card kanan */
+.win {
+  --card: #0c1030;
+  border: 1.5px solid transparent;
+  border-radius: 28px;
+  overflow: hidden;
+  transform: translateY(calc(var(--sy, 0) * -.12px));
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+    linear-gradient(140deg, var(--mode), #a855f7 70%, transparent) border-box;
+  box-shadow: 0 30px 60px -20px rgba(5, 8, 30, .6), 0 0 60px -10px var(--glow);
+  color: #dbe3ff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .88rem;
+}
+
+.win-bar {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .8rem 1.1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  color: #8c97c4;
+  font-size: .8rem;
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+}
+
+.dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+
+.dots i:nth-child(2) {
+  background: #febc2e;
+}
+
+.dots i:nth-child(3) {
+  background: #28c840;
+}
+
+.panel {
+  padding: 1.1rem 1.25rem 0;
+  min-height: 21rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+.code {
+  flex: 1;
+}
+
+.l {
+  display: block;
+  white-space: pre-wrap;
+  line-height: 1.75;
+}
+
+#panel-dev .code {
+  counter-reset: ln;
+}
+
+#panel-dev .l {
+  counter-increment: ln;
+}
+
+#panel-dev .l::before {
+  content: counter(ln);
+  display: inline-block;
+  width: 1.6rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: #4b5688;
+}
+
+.panel.play .l {
+  animation: line-in .35s both;
+  animation-delay: calc(var(--i) * 70ms);
+}
+
+@keyframes line-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+}
+
+.pfoot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem -1.25rem 0;
+  padding: .75rem 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  font-size: .78rem;
+  color: #8c97c4;
+}
+
+
+/* mode hacker: card serba hijau */
+.hero[data-mode="hack"] .win {
+  --card: #04130c;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+    linear-gradient(140deg, #4ade80, #14b8a6 70%, transparent) border-box;
+  box-shadow: 0 30px 60px -20px rgba(0, 20, 10, .7), 0 0 60px -10px rgba(74, 222, 128, .35);
+  color: #c9f7dc;
+}
+
+.hero[data-mode="hack"] .win-bar,
+.hero[data-mode="hack"] .pfoot {
+  color: #5fae85;
+  border-color: rgba(74, 222, 128, .15);
+}
+
+.hero[data-mode="hack"] .l.d {
+  color: #6fb592;
+}
+
+.hero[data-mode="hack"] .o {
+  color: #fb7185;
+}

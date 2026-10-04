@@ -1,0 +1,71 @@
+/* about.css — Section Tentang: timeline dan chip tech stack */
+
+/* ---------- TENTANG: dua sisi (ungu = developer, hijau = hacker) ---------- */
+
+.tl::before {
+  content: "";
+  position: absolute;
+  left: 5px; top: .4rem;
+  bottom: .9rem; width: 2px; 
+  background: linear-gradient(var(--hl), var(--gr));
+}
+
+.tl li {
+  --c: var(--hl);
+}
+
+.tl li[data-side="hack"] {
+  --c: var(--gr);
+}
+
+.tl li::before {
+  content: "";
+  position: absolute;
+  left: -1.5rem;
+  top: .35rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 22%, transparent);
+}
+
+.tl li[data-side="both"]::before {
+  background: linear-gradient(135deg, var(--hl), var(--gr));
+}
+
+
+.chip {
+  --c: var(--hl);
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bs-body-color) 5%, transparent);
+  transition: opacity .3s, transform .3s, border-color .2s;
+}
+.chip[data-side="hack"] {
+  --c: var(--gr);
+}
+
+.chip i {
+  color: var(--c);
+}
+
+.chip[data-side="both"] i {
+  background: linear-gradient(135deg, var(--hl), var(--gr));
+  -webkit-background-clip: text;
+  background-clip: text; color: transparent;
+}
+
+.chip:hover {
+  border-color: var(--c);
+  transform: translateY(-2px);
+}
+
+.chip[data-side="both"]:hover {
+  border-color: var(--hl);
+}
+
+.stack[data-filter="dev"] .chip[data-side="hack"],
+
+.stack[data-filter="hack"] .chip[data-side="dev"] {
+  opacity: .2; transform: scale(.95);
+}

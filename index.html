@@ -1,777 +1,498 @@
 <!DOCTYPE html>
 <html lang="id" data-bs-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nama Kamu — Portofolio</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>wth is this</title>
 
-<!-- Terapkan tema tersimpan sebelum halaman tampil (mencegah kedip) -->
-<script>
-  (function () {
-    var t = null;
-    try { t = localStorage.getItem('tema'); } catch (e) {}
-    if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-bs-theme', t);
-    if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.documentElement.classList.add('reveal-ready');
-      setTimeout(function () { if (!window.__revealOK) document.documentElement.classList.remove('reveal-ready'); }, 2500);
-    }
-  })();
-</script>
+  <!-- Terapkan tema tersimpan sebelum halaman tampil (mencegah kedip) -->
+  <script src="js/theme-init.js"></script>
+  <script src="js/reveal-init.js"></script>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-  /* ---------- TEMA: putih (terang) & biru navy (gelap) ---------- */
-  [data-bs-theme="light"] {
-    --bs-body-bg: #ffffff;
-    --bs-body-color: #0b1b3d;
-    --muted: #55627f;
-    --accent: #14307a;
-    --accent-ink: #ffffff;
-    --line: #dde3f0;
-    --bar-bg: transparent;
-    --pill-bg: #ffffff;
-    --shadow: 0 4px 14px rgba(11, 27, 61, .1);
-  }
-  [data-bs-theme="dark"] {
-    --bs-body-bg: #0a0c21;
-    --bs-body-color: #e8ebfa;
-    --muted: #9aa3c7;
-    --accent: #8aa2ff;
-    --accent-ink: #0a0c21;
-    --line: #20264d;
-    --bar-bg: transparent;
-    --pill-bg: #141a3c;
-    --shadow: 0 4px 14px rgba(0, 0, 0, .45);
-  }
-
-  body { transition: background-color .3s, color .3s; }
-  h1, .brand { font-family: "Bricolage Grotesque", system-ui, sans-serif; }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
-
-  /* ---------- TOPBAR (auto-hide) ---------- */
-  .hot-zone { height: 28px; z-index: 1049; }
-
-  /* latar blur selebar layar di belakang semua elemen navbar */
-  .topbar {
-    z-index: 1050;
-    grid-template-columns: 1fr auto 1fr;   /* kiri | tengah | kanan */
-    background: var(--bar-bg);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    backdrop-filter: blur(16px) saturate(140%);
-    border-bottom: 1px solid var(--line);
-    transition: transform .4s cubic-bezier(.2, .8, .2, 1), opacity .3s;
-  }
-  .topbar.is-hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
-  /* saat hero mode hacker ada di belakang navbar, warna navbar ikut hijau */
-  .topbar[data-over="hack"] {
-    --bs-body-color: #d3f9e2; --muted: #7fbf9f; --line: rgba(74, 222, 128, .22);
-    --pill-bg: #0a2216; --shadow: 0 4px 14px rgba(0, 0, 0, .4);
-  }
-
-  .pill {
-    background: var(--pill-bg);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow);
-  }
-
-  /* kiri: nama */
-  .brand { justify-self: start; color: var(--bs-body-color); }
-
-  /* tengah: menu */
-  .nav-pill a { color: var(--muted); transition: background .2s, color .2s; }
-  .nav-pill a:hover { background: var(--line); color: var(--bs-body-color); }
-
-  /* kanan: tombol tema */
-  .theme-btn { justify-self: end; width: 44px; height: 44px; color: var(--bs-body-color); }
-  .theme-btn:hover { background: var(--line); }
-  [data-bs-theme="light"] .icon-sun,
-  [data-bs-theme="dark"] .icon-moon { display: none; }
-
-  /* mobile: baris atas = nama + tema, baris bawah = menu selebar layar */
-  @media (max-width: 767.98px) {
-    .topbar { grid-template-columns: 1fr auto; }
-    .topbar > nav { grid-column: 1 / -1; grid-row: 2; }
-    .topbar .nav-pill { width: 100%; justify-content: space-between; margin: 0 !important; }
-    .topbar .nav-pill li { flex: 1; }
-    .topbar .nav-pill a { text-align: center; }
-  }
-
-  /* ---------- HERO ---------- */
-  .hero {
-    --mode: var(--accent); --mode-ink: var(--accent-ink); --glow: rgba(120, 130, 255, .4);
-    padding-top: 6.5rem; overflow-x: clip;
-  }
-  .hero { color: var(--bs-body-color); background-color: var(--bs-body-bg); transition: background-color .5s, color .5s; }
-  /* mode hacker: seluruh hero jadi hijau gelap berpola grid (di tema terang maupun gelap) */
-  .hero[data-mode="hack"] {
-    --mode: #4ade80; --mode-ink: #052e16; --glow: rgba(74, 222, 128, .28);
-    --bs-body-color: #d3f9e2; --muted: #7fbf9f; --line: rgba(74, 222, 128, .22);
-    --pill-bg: #0a2216; --shadow: 0 4px 14px rgba(0, 0, 0, .4);
-    background-color: #04130c;
-    background-image: linear-gradient(rgba(74, 222, 128, .07) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(74, 222, 128, .07) 1px, transparent 1px);
-    background-size: 44px 44px;
-  }
-  .hero[data-mode="hack"] .dock a::after { background: #d3f9e2; color: #04130c; }
-
-  /* aksen teks: ungu (developer) / hijau (hacker) */
-  [data-bs-theme="light"] .hero { --hl: #6d28d9; }
-  [data-bs-theme="dark"] .hero { --hl: #9b6bff; }
-  .hero[data-mode="hack"] { --hl: var(--mode); }
-  .hero::after {
-    content: ""; position: absolute; left: -10%; bottom: -18%;
-    width: min(520px, 70vw); aspect-ratio: 1; border-radius: 50%;
-    transform: translate3d(0, calc(var(--sy, 0) * .3px), 0); will-change: transform;
-    background: radial-gradient(closest-side, var(--glow), transparent); pointer-events: none;
-  }
-
-  /* kartu statistik berlatar blur */
-  .stat {
-    background: color-mix(in srgb, var(--bs-body-color) 6%, transparent);
-    border: 1px solid var(--line);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-  }
-  .stat i {
-    width: 44px; height: 44px; color: var(--hl);
-    background: color-mix(in srgb, var(--hl) 16%, transparent);
-  }
-  .stat .num { font-family: "Poppins", system-ui, sans-serif; }
-  .stat .lbl { color: var(--muted); }
-  .stat { transition: transform .25s ease, border-color .25s, box-shadow .25s; }
-  .stat:hover {
-    transform: translateY(-3px) scale(1.03);
-    border-color: color-mix(in srgb, var(--hl) 55%, transparent);
-    box-shadow: 0 14px 30px -14px var(--glow);
-  }
-
-  /* badge di atas judul */
-  .badge-pill {
-    font-family: "Poppins", system-ui, sans-serif; color: var(--hl);
-    background: color-mix(in srgb, var(--hl) 18%, transparent);
-    border: 1px solid color-mix(in srgb, var(--hl) 35%, transparent);
-  }
-  .hero-text { transform: translateY(calc(var(--sy, 0) * .1px)); will-change: transform; }
-  .hero::before {
-    content: ""; position: absolute; right: -8%; top: 12%;
-    width: min(620px, 80vw); aspect-ratio: 1; border-radius: 50%;
-    transform: translate3d(0, calc(var(--sy, 0) * .5px), 0); will-change: transform;
-    background: radial-gradient(closest-side, var(--glow), transparent);
-    pointer-events: none;
-  }
-  .hero h1, .hero .role, .hero .lead { font-family: "Poppins", system-ui, sans-serif; }
-  .hero h1 { letter-spacing: -.025em; }
-  .hero .role { color: var(--hl); letter-spacing: -.015em; }
-  .hero .lead { color: color-mix(in srgb, var(--bs-body-color) 80%, transparent); max-width: 46ch; }
-
-  /* tombol tab */
-  .controls { width: fit-content; }
-  .vsep { width: 1px; background: var(--line); }
-  .tabs button { background: transparent; color: var(--muted); transition: background .25s, color .25s; }
-  .tabs button:not([aria-selected="true"]):hover { color: var(--bs-body-color); }
-  .tabs button[aria-selected="true"] { background: var(--mode); color: var(--mode-ink); }
-
-  /* dock medsos: ikon membesar mengikuti kursor */
-  .dock a {
-    --s: 1; width: 44px; height: 44px;
-    border: 1px solid var(--line); color: var(--bs-body-color);
-    transform: scale(var(--s)); transform-origin: 50% 100%;
-    transition: transform .12s ease-out, background .2s, color .2s, border-color .2s;
-  }
-  .dock a:hover, .dock a:focus-visible { background: var(--mode); border-color: var(--mode); color: var(--mode-ink); }
-  .dock a::after {
-    content: attr(data-tip);
-    position: absolute; bottom: calc(100% + 8px); left: 0; right: 0; margin-inline: auto; width: max-content;
-    padding: .2rem .6rem; border-radius: 8px; font-size: .75rem;
-    background: var(--bs-body-color); color: var(--bs-body-bg);
-    opacity: 0; pointer-events: none; transition: opacity .15s;
-    transform: scale(calc(1 / var(--s))); transform-origin: 50% 100%;
-  }
-  .dock a:hover::after, .dock a:focus-visible::after { opacity: 1; }
-
-  /* card kanan */
-  .win {
-    --card: #0c1030;
-    border: 1.5px solid transparent; border-radius: 28px; overflow: hidden;
-    transform: translateY(calc(var(--sy, 0) * -.12px));
-    background: linear-gradient(var(--card), var(--card)) padding-box,
-                linear-gradient(140deg, var(--mode), #a855f7 70%, transparent) border-box;
-    box-shadow: 0 30px 60px -20px rgba(5, 8, 30, .6), 0 0 60px -10px var(--glow);
-    color: #dbe3ff;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .88rem;
-  }
-  .win-bar { display: flex; align-items: center; gap: .75rem; padding: .8rem 1.1rem; border-bottom: 1px solid rgba(255, 255, 255, .08); color: #8c97c4; font-size: .8rem; }
-  .dots { display: flex; gap: 6px; }
-  .dots i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; }
-  .dots i:nth-child(2) { background: #febc2e; }
-  .dots i:nth-child(3) { background: #28c840; }
-  .panel { padding: 1.1rem 1.25rem 0; min-height: 21rem; display: flex; flex-direction: column; }
-  .panel[hidden] { display: none; }
-  .code { flex: 1; }
-  .l { display: block; white-space: pre-wrap; line-height: 1.75; }
-  #panel-dev .code { counter-reset: ln; }
-  #panel-dev .l { counter-increment: ln; }
-  #panel-dev .l::before { content: counter(ln); display: inline-block; width: 1.6rem; margin-right: 1rem; text-align: right; color: #4b5688; }
-  .panel.play .l { animation: line-in .35s both; animation-delay: calc(var(--i) * 70ms); }
-  @keyframes line-in { from { opacity: 0; transform: translateX(-8px); } }
-  .k { color: #c792ea; } .s { color: #a5e8a0; } .n { color: #ffb86c; } .p { color: #82aaff; } .c { color: #5b678f; font-style: italic; }
-  .o { color: #f07178; } .g { color: #4ade80; } .d { color: #8c97c4; } .pr { color: #4ade80; }
-  .cur::after { content: ""; display: inline-block; width: .55em; height: 1.1em; margin-left: 2px; background: #4ade80; vertical-align: text-bottom; animation: blink 1s steps(2) infinite; }
-  @keyframes blink { to { opacity: 0; } }
-  .pfoot { display: flex; justify-content: space-between; align-items: center; margin: 1rem -1.25rem 0; padding: .75rem 1.25rem; border-top: 1px solid rgba(255, 255, 255, .08); font-size: .78rem; color: #8c97c4; }
-  .live::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: .5rem; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; }
-
-  /* mode hacker: card serba hijau */
-  .hero[data-mode="hack"] .win {
-    --card: #04130c;
-    background: linear-gradient(var(--card), var(--card)) padding-box,
-                linear-gradient(140deg, #4ade80, #14b8a6 70%, transparent) border-box;
-    box-shadow: 0 30px 60px -20px rgba(0, 20, 10, .7), 0 0 60px -10px rgba(74, 222, 128, .35);
-    color: #c9f7dc;
-  }
-  .hero[data-mode="hack"] .win-bar,
-  .hero[data-mode="hack"] .pfoot { color: #5fae85; border-color: rgba(74, 222, 128, .15); }
-  .hero[data-mode="hack"] .l.d { color: #6fb592; }
-  .hero[data-mode="hack"] .o { color: #fb7185; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .panel.play .l, .cur::after { animation: none; }
-    .dock a, .stat { transition: none; }
-    .stat:hover { transform: none; }
-  }
-
-  /* ---------- PROJECTS ---------- */
-  [data-bs-theme="light"] .projects, [data-bs-theme="light"] .about { --hl: #6d28d9; --gr: #15803d; }
-  [data-bs-theme="dark"] .projects, [data-bs-theme="dark"] .about { --hl: #9b6bff; --gr: #4ade80; }
-  .projects h2, .about h2 { font-family: "Poppins", system-ui, sans-serif; letter-spacing: -.02em; }
-  .eyebrow { color: var(--hl); letter-spacing: .08em; }
-  .view-all { transition: background .2s; }
-  .view-all:hover { background: var(--line); }
-
-  .project {
-    background: var(--pill-bg); border: 1px solid var(--line); box-shadow: var(--shadow);
-    transition: transform .3s ease, box-shadow .3s;
-  }
-  .canvas {
-    background: radial-gradient(circle at 15% 0, rgba(255, 255, 255, .35), transparent 55%),
-                linear-gradient(135deg, var(--a), var(--b));
-  }
-  /* mockup UI sederhana (ganti dengan <img> screenshot proyek) */
-  .mock {
-    position: relative; overflow: hidden; width: 76%; height: 50%; margin: 12% auto 0;
-    border-radius: 12px; background: rgba(255, 255, 255, .9);
-    box-shadow: 0 14px 30px -12px rgba(0, 0, 0, .4);
-    transform: translateY(calc(var(--p, 0) * .08px)); will-change: transform;
-  }
-  .mock::before { content: ""; position: absolute; inset: 0 0 auto; height: 14px; background: rgba(0, 0, 0, .07); }
-  .mock::after {
-    content: ""; position: absolute; inset: 26px 12px 12px; opacity: .9;
-    background:
-      linear-gradient(var(--a), var(--a)) 0 0 / 34% 10px no-repeat,
-      linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)) 0 20px / 60% 6px no-repeat,
-      linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)) 0 34px / 46% 6px no-repeat,
-      linear-gradient(var(--b), var(--b)) 100% 0 / 26% 100% no-repeat;
-  }
-  .info {
-    background: color-mix(in srgb, var(--bs-body-bg) 72%, transparent);
-    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-    border: 1px solid var(--line);
-  }
-  .info .cat { color: var(--muted); }
-  .arrow {
-    width: 40px; height: 40px; border: 1px solid var(--line);
-    transition: background .25s, color .25s, border-color .25s;
-  }
-  .project:hover .arrow { background: var(--hl); border-color: var(--hl); color: #fff; }
-  @media (prefers-reduced-motion: no-preference) {
-    .project:hover { transform: translateY(-4px) scale(1.02); }
-    .project:hover .mock { transform: translateY(calc(var(--p, 0) * .08px - 4px)); }
-  }
-
-  /* scroll reveal: elemen muncul saat masuk layar (hanya aktif jika JS jalan) */
-  .reveal-ready .reveal {
-    opacity: 0; transform: translateY(36px) scale(.97);
-    transition: opacity 1.1s ease, transform 1.1s cubic-bezier(.2, .8, .2, 1);
-  }
-  .reveal-ready .reveal.is-visible { opacity: 1; transform: none; }
-
-  /* ---------- TENTANG: dua sisi (ungu = developer, hijau = hacker) ---------- */
-  .about { overflow-x: clip; }
-  .about::before, .about::after { content: ""; position: absolute; width: min(480px, 70vw); aspect-ratio: 1; border-radius: 50%; pointer-events: none; }
-  .about::before { left: -12%; top: 4%; background: radial-gradient(closest-side, color-mix(in srgb, var(--hl) 35%, transparent), transparent); }
-  .about::after { right: -12%; bottom: 0; background: radial-gradient(closest-side, color-mix(in srgb, var(--gr) 30%, transparent), transparent); }
-  .glass {
-    background: color-mix(in srgb, var(--bs-body-color) 5%, transparent); border: 1px solid var(--line);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-  }
-  .tl::before { content: ""; position: absolute; left: 5px; top: .4rem; bottom: .9rem; width: 2px; background: linear-gradient(var(--hl), var(--gr)); }
-  .tl li { --c: var(--hl); }
-  .tl li[data-side="hack"] { --c: var(--gr); }
-  .tl li::before {
-    content: ""; position: absolute; left: -1.5rem; top: .35rem; width: 12px; height: 12px; border-radius: 50%;
-    background: var(--c); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 22%, transparent);
-  }
-  .tl li[data-side="both"]::before { background: linear-gradient(135deg, var(--hl), var(--gr)); }
-
-  .filter button { background: transparent; color: var(--muted); transition: background .25s, color .25s; }
-  .filter button[aria-pressed="true"] { background: var(--bs-body-color); color: var(--bs-body-bg); }
-  .filter button[data-f="dev"][aria-pressed="true"] { background: var(--hl); color: var(--bs-body-bg); }
-  .filter button[data-f="hack"][aria-pressed="true"] { background: var(--gr); color: var(--bs-body-bg); }
-  .group-label { color: var(--muted); letter-spacing: .08em; }
-
-  .chip {
-    --c: var(--hl);
-    border: 1px solid var(--line); background: color-mix(in srgb, var(--bs-body-color) 5%, transparent);
-    transition: opacity .3s, transform .3s, border-color .2s;
-  }
-  .chip[data-side="hack"] { --c: var(--gr); }
-  .chip i { color: var(--c); }
-  .chip[data-side="both"] i { background: linear-gradient(135deg, var(--hl), var(--gr)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .chip:hover { border-color: var(--c); transform: translateY(-2px); }
-  .chip[data-side="both"]:hover { border-color: var(--hl); }
-  .stack[data-filter="dev"] .chip[data-side="hack"],
-  .stack[data-filter="hack"] .chip[data-side="dev"] { opacity: .2; transform: scale(.95); }
-
-  /* mobile: bar navbar dua baris lebih tinggi, jadi beri ruang lebih di atas */
-  @media (max-width: 767.98px) {
-    .hero { padding-top: 9.5rem; }
-    html { scroll-padding-top: 9.5rem; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    .topbar, body { transition: none; }
-  }
-</style>
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/terminal.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/theme-toggle.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/hero-stats.css">
+  <link rel="stylesheet" href="css/hero-tabs.css">
+  <link rel="stylesheet" href="css/hero-dock.css">
+  <link rel="stylesheet" href="css/hero-card.css">
+  <link rel="stylesheet" href="css/projects.css">
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/about.css">
+  <link rel="stylesheet" href="css/certificates.css">
+  <link rel="stylesheet" href="css/contact.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/layout-mobile.css">
+  <link rel="stylesheet" href="css/reduced-motion.css">
 </head>
 <body>
 
-<div class="hot-zone position-fixed top-0 start-0 end-0" id="hotZone" aria-hidden="true"></div>
+  <div class="hot-zone position-fixed top-0 start-0 end-0" id="hotZone" aria-hidden="true"></div>
 
-<header class="topbar fixed-top d-grid align-items-center column-gap-3 row-gap-2 py-2 px-3 px-md-5" id="topbar">
-  <a class="brand fw-bold text-decoration-none text-nowrap py-2 fs-5" href="#beranda">yoksipmksi</a>
+  <header class="topbar fixed-top d-grid align-items-center column-gap-3 row-gap-2 py-2 px-3 px-md-5" id="topbar">
+    <a class="brand fw-bold text-decoration-none text-nowrap py-2 fs-5" href="#beranda">yoksipmksi</a>
 
-  <nav aria-label="Navigasi utama">
-    <ul class="nav-pill pill d-flex gap-1 p-1 m-1 list-unstyled rounded-pill">
-      <li><a class="d-block px-2 px-sm-3 py-2 rounded-pill text-decoration-none" href="#beranda">Beranda</a></li>
-      <li><a class="d-block px-2 px-sm-3 py-2 rounded-pill text-decoration-none" href="#tentang">Tentang</a></li>
-      <li><a class="d-block px-2 px-sm-3 py-2 rounded-pill text-decoration-none" href="#proyek">Proyek</a></li>
-      <li><a class="d-block px-2 px-sm-3 py-2 rounded-pill text-decoration-none" href="#kontak">Kontak</a></li>
-    </ul>
-  </nav>
+    <nav aria-label="Navigasi utama">
+      <ul class="nav-pill pill d-flex gap-1 p-1 m-1 list-unstyled rounded-pill">
+        <li><a class="d-block px-1 px-sm-3 px-md-2 px-lg-3 py-2 rounded-pill text-decoration-none" href="#beranda">Beranda</a></li>
+        <li><a class="d-block px-1 px-sm-3 px-md-2 px-lg-3 py-2 rounded-pill text-decoration-none" href="#tentang">Tentang</a></li>
+        <li><a class="d-block px-1 px-sm-3 px-md-2 px-lg-3 py-2 rounded-pill text-decoration-none" href="#proyek">Proyek</a></li>
+        <li><a class="d-block px-1 px-sm-3 px-md-2 px-lg-3 py-2 rounded-pill text-decoration-none" href="#sertifikat">Sertifikat</a></li>
+        <li><a class="d-block px-1 px-sm-3 px-md-2 px-lg-3 py-2 rounded-pill text-decoration-none" href="#kontak">Kontak</a></li>
+      </ul>
+    </nav>
 
-  <button class="theme-btn pill d-flex align-items-center justify-content-center p-0 rounded-pill" id="themeBtn" type="button" aria-label="Ganti tema">
-    <i class="bi bi-sun-fill icon-sun fs-5 lh-1" aria-hidden="true"></i>
-    <i class="bi bi-moon-stars-fill icon-moon fs-5 lh-1" aria-hidden="true"></i>
-  </button>
-</header>
+    <button class="theme-btn pill d-flex align-items-center justify-content-center p-0 rounded-pill" id="themeBtn" type="button" aria-label="Ganti tema">
+      <i class="bi bi-sun-fill icon-sun fs-5 lh-1" aria-hidden="true"></i>
+      <i class="bi bi-moon-stars-fill icon-moon fs-5 lh-1" aria-hidden="true"></i>
+    </button>
+  </header>
 
-<main>
-  <section class="hero d-flex align-items-center min-vh-100 pb-5 position-relative" id="beranda" data-mode="dev">
-    <div class="container position-relative">
-      <div class="row align-items-center gx-5 gy-4">
+  <main>
+    <section class="hero d-flex align-items-center min-vh-100 pb-5 position-relative" id="beranda" data-mode="dev">
+      <div class="container position-relative">
+        <div class="row align-items-center gx-5 gy-4">
 
-        <div class="col-lg-6 hero-text">
-          <span class="reveal badge-pill d-table px-2 py-1 rounded-pill fw-medium lh-base small mb-2">"No bug no life"</span>
-          <h2 class="reveal display-3 fw-bold lh-1 mb-1">Hi, I'm Dhimas Indra</h2>
-          <p class="reveal role fs-3 fw-bold lh-sm mb-2">Siang nambahin bug, malam hunting bug.</p>
-          <p class="reveal lead fw-normal lh-lg mb-0 fs-6">Ngerakit web rapi rapi pas terang, terus ngobrak abrik pintunya pas gelap. Klik tombol di bawah buat intip cara kerja saya.</p>
+          <div class="col-lg-6 hero-text">
+            <span class="reveal badge-pill d-table px-2 py-1 rounded-pill fw-medium lh-base small mb-2">No bug no life</span>
+            <h2 class="reveal display-3 fw-bold lh-1 mb-1">Hi, I'm Dhimas Indra</h2>
+            <p class="reveal role fs-3 fw-bold lh-sm mb-2">Siang nambahin bug, malam hunting bug.</p>
+            <p class="reveal lead fw-normal lh-lg mb-0 fs-6">Ngerakit web rapi rapi pas terang, terus ngobrak abrik pintunya pas gelap. Klik tombol di bawah buat intip cara kerja saya.</p>
 
-          <div class="controls pill mt-4 d-flex flex-wrap align-items-center justify-content-center gap-2 p-2 mw-100 rounded-5">
-            <div class="tabs d-none d-md-flex gap-1" role="tablist" aria-label="Pilih sisi">
-            <button class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill border-0 fw-medium" type="button" role="tab" id="tab-dev" data-mode="dev" aria-selected="true" aria-controls="panel-dev"><i class="bi bi-code-slash"></i> Developer</button>
-            <button class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill border-0 fw-medium" type="button" role="tab" id="tab-hack" data-mode="hack" aria-selected="false" aria-controls="panel-hack" tabindex="-1"><i class="bi bi-terminal"></i> Hunter</button>
+            <div class="controls pill mt-4 d-flex flex-wrap align-items-center justify-content-center gap-2 p-2 mw-100 rounded-5">
+              <div class="tabs d-none d-md-flex gap-1" role="tablist" aria-label="Pilih sisi">
+                <button class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill border-0 fw-medium" type="button" role="tab" id="tab-dev" data-mode="dev" aria-selected="true" aria-controls="panel-dev"><i class="bi bi-code-slash"></i> Developer</button>
+                <button class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill border-0 fw-medium" type="button" role="tab" id="tab-hack" data-mode="hack" aria-selected="false" aria-controls="panel-hack" tabindex="-1"><i class="bi bi-terminal"></i> Hunter</button>
+            </div>
+              <span class="vsep d-none d-md-block align-self-stretch my-2" aria-hidden="true"></span>
+              <ul class="dock d-flex align-items-center gap-2 px-1 m-0 list-unstyled" id="dock" aria-label="Media sosial">
+                <li><a class="fs-5 position-relative d-flex align-items-center justify-content-center rounded-4 text-decoration-none" href="https://github.com/yoksipmksi" target="_blank" rel="noopener" data-tip="GitHub" aria-label="GitHub"><i class="bi bi-github"></i></a></li>
+                <li><a class="fs-5 position-relative d-flex align-items-center justify-content-center rounded-4 text-decoration-none" href="https://instagram.com/y_oksipmksi" target="_blank" rel="noopener" data-tip="Instagram" aria-label="Instagram"><i class="bi bi-instagram"></i></a></li>
+                <li><a class="fs-5 position-relative d-flex align-items-center justify-content-center rounded-4 text-decoration-none" href="mailto:dhimasindramaulana@gmail.com" data-tip="Email" aria-label="Email"><i class="bi bi-envelope-fill"></i></a></li>
+              </ul>
+            </div>
           </div>
-            <span class="vsep d-none d-md-block align-self-stretch my-2" aria-hidden="true"></span>
-            <ul class="dock d-flex align-items-center gap-2 px-1 m-0 list-unstyled" id="dock" aria-label="Media sosial">
-              <li><a class="fs-5 position-relative d-flex align-items-center justify-content-center rounded-4 text-decoration-none" href="https://github.com/yoksipmksi" target="_blank" rel="noopener" data-tip="GitHub" aria-label="GitHub"><i class="bi bi-github"></i></a></li>
-              <li><a class="fs-5 position-relative d-flex align-items-center justify-content-center rounded-4 text-decoration-none" href="https://instagram.com/y_oksipmksi" target="_blank" rel="noopener" data-tip="Instagram" aria-label="Instagram"><i class="bi bi-instagram"></i></a></li>
-              <li><a class="fs-5 position-relative d-flex align-items-center justify-content-center rounded-4 text-decoration-none" href="mailto:dhimasindramaulana@gmail.com" data-tip="Email" aria-label="Email"><i class="bi bi-envelope-fill"></i></a></li>
-            </ul>
+
+          <div class="col-lg-6 d-none d-md-block">
+            <div class="win">
+              <div class="win-bar">
+                <span class="dots"><i></i><i></i><i></i></span>
+                <span id="winTitle">dev.js</span>
+              </div>
+
+              <div class="panel" id="panel-dev" role="tabpanel" aria-labelledby="tab-dev">
+                <div class="code">
+                  <span class="l c">// about me</span>
+                  <span class="l"><span class="k">const</span> <span class="p">dev</span> = {</span>
+                  <span class="l">  <span class="p">nama</span>: <span class="s">"Dhimas Indra"</span>,</span>
+                  <span class="l">  <span class="p">peran</span>: <span class="s">"Web Developer"</span>,</span>
+                  <span class="l">  <span class="p">stack</span>: [<span class="s">"PHP"</span>, <span class="s">"JavaScript"</span>, <span class="s">"MySQL"</span>],</span>
+                  <span class="l">  <span class="p">tools</span>: [<span class="s">"Git"</span>, <span class="s">"Bootstrap"</span>, <span class="s">"Tailwind"</span>],</span>
+                  <span class="l">  <span class="p">lokasi</span>: <span class="s">"Kota, Indonesia"</span>,</span>
+                  <span class="l">  <span class="p">bukaPeluang</span>: <span class="n">true</span>,</span>
+                  <span class="l">};</span>
+                  <span class="l">&nbsp;</span>
+                  <span class="l"><span class="p">dev</span>.<span class="o">hubungi</span>(); <span class="c">// klik ikon di bawah</span></span>
+                </div>
+                <div class="pfoot">
+                  <span class="live">Terbuka untuk freelance</span>
+                  <span>JavaScript</span>
+                </div>
+              </div>
+
+              <div class="panel" id="panel-hack" role="tabpanel" aria-labelledby="tab-hack" hidden>
+                <div class="code">
+                  <span class="l"><span class="pr">$</span> whoami</span>
+                  <span class="l g">nama_kamu</span>
+                  <span class="l"><span class="pr">$</span> cat skill.txt</span>
+                  <span class="l d">web-security · linux · python · ctf</span>
+                  <span class="l"><span class="pr">$</span> nmap -sV portofolio.local</span>
+                  <span class="l d">PORT     STATE   SERVICE</span>
+                  <span class="l d">22/tcp   <span class="o">closed</span>  ssh</span>
+                  <span class="l d">80/tcp   <span class="g">open</span>    http</span>
+                  <span class="l d">443/tcp  <span class="g">open</span>    https</span>
+                  <span class="l"><span class="pr">$</span> ./kolaborasi.sh</span>
+                  <span class="l g cur">[+] akses diterima, siap bekerja sama</span>
+                </div>
+                <div class="pfoot"><span class="live">root@portfolio</span><span>zsh</span></div>
+              </div>
+            </div>
           </div>
+
         </div>
 
-        <div class="col-lg-6 d-none d-md-block">
-          <div class="win">
-            <div class="win-bar">
-              <span class="dots"><i></i><i></i><i></i></span>
-              <span id="winTitle">dev.js</span>
-            </div>
-
-            <div class="panel" id="panel-dev" role="tabpanel" aria-labelledby="tab-dev">
-              <div class="code">
-                <span class="l c">// about me</span>
-                <span class="l"><span class="k">const</span> <span class="p">dev</span> = {</span>
-                <span class="l">  <span class="p">nama</span>: <span class="s">"Dhimas Indra"</span>,</span>
-                <span class="l">  <span class="p">peran</span>: <span class="s">"Web Developer"</span>,</span>
-                <span class="l">  <span class="p">stack</span>: [<span class="s">"PHP"</span>, <span class="s">"JavaScript"</span>, <span class="s">"MySQL"</span>],</span>
-                <span class="l">  <span class="p">tools</span>: [<span class="s">"Git"</span>, <span class="s">"Bootstrap"</span>, <span class="s">"Tailwind"</span>],</span>
-                <span class="l">  <span class="p">lokasi</span>: <span class="s">"Kota, Indonesia"</span>,</span>
-                <span class="l">  <span class="p">bukaPeluang</span>: <span class="n">true</span>,</span>
-                <span class="l">};</span>
-                <span class="l">&nbsp;</span>
-                <span class="l"><span class="p">dev</span>.<span class="o">hubungi</span>(); <span class="c">// klik ikon di bawah</span></span>
+        <div class="mt-5">
+          <div class="row row-cols-2 row-cols-lg-4 g-3">
+            <div class="col">
+              <div class="stat d-flex align-items-center gap-3 h-100 p-3 rounded-4">
+                <i class="bi bi-folder2-open fs-5 d-flex align-items-center justify-content-center flex-shrink-0 rounded-4"></i>
+                <div>
+                  <div class="num fs-3 fw-bold lh-1"><span data-count="5">5</span>+</div>
+                  <div class="lbl fs-6">Proyek selesai</div>
+                </div>
               </div>
-              <div class="pfoot"><span class="live">Terbuka untuk freelance</span><span>JavaScript</span></div>
             </div>
-
-            <div class="panel" id="panel-hack" role="tabpanel" aria-labelledby="tab-hack" hidden>
-              <div class="code">
-                <span class="l"><span class="pr">$</span> whoami</span>
-                <span class="l g">nama_kamu</span>
-                <span class="l"><span class="pr">$</span> cat skill.txt</span>
-                <span class="l d">web-security · linux · python · ctf</span>
-                <span class="l"><span class="pr">$</span> nmap -sV portofolio.local</span>
-                <span class="l d">PORT     STATE   SERVICE</span>
-                <span class="l d">22/tcp   <span class="o">closed</span>  ssh</span>
-                <span class="l d">80/tcp   <span class="g">open</span>    http</span>
-                <span class="l d">443/tcp  <span class="g">open</span>    https</span>
-                <span class="l"><span class="pr">$</span> ./kolaborasi.sh</span>
-                <span class="l g cur">[+] akses diterima, siap bekerja sama</span>
+            <div class="col">
+              <div class="stat d-flex align-items-center gap-3 h-100 p-3 rounded-4">
+                <i class="bi bi-clock-history fs-5 d-flex align-items-center justify-content-center flex-shrink-0 rounded-4"></i>
+                <div>
+                  <div class="num fs-3 fw-bold lh-1"><span data-count="2">2</span>+</div>
+                  <div class="lbl fs-6">Tahun pengalaman</div>
+                </div>
               </div>
-              <div class="pfoot"><span class="live">root@portfolio</span><span>zsh</span></div>
+            </div>
+            <div class="col">
+              <div class="stat d-flex align-items-center gap-3 h-100 p-3 rounded-4">
+                <i class="bi bi-stack fs-5 d-flex align-items-center justify-content-center flex-shrink-0 rounded-4"></i>
+                <div>
+                  <div class="num fs-3 fw-bold lh-1"><span data-count="8">8</span></div>
+                  <div class="lbl fs-6">Teknologi dikuasai</div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="stat d-flex align-items-center gap-3 h-100 p-3 rounded-4">
+                <i class="bi bi-award fs-5 d-flex align-items-center justify-content-center flex-shrink-0 rounded-4"></i>
+                <div>
+                  <div class="num fs-3 fw-bold lh-1"><span data-count="5">5</span></div>
+                  <div class="lbl fs-6">Sertifikat &amp; lomba</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
-      </div>
+    <section class="about position-relative py-5" id="tentang">
+      <div class="container position-relative">
+        <div class="reveal mb-4">
+          <p class="eyebrow small fw-semibold text-uppercase mb-1">Tentang Saya</p>
+          <h2 class="fs-1 fw-bold lh-1 mb-0">Dua Sisi, Satu Orang</h2>
+        </div>
 
-      <div class="mt-5">
-      <div class="row row-cols-2 row-cols-lg-4 g-3">
-        <div class="col"><div class="stat d-flex align-items-center gap-3 h-100 p-3 rounded-4"><i class="bi bi-folder2-open fs-5 d-flex align-items-center justify-content-center flex-shrink-0 rounded-4"></i><div><div class="num fs-3 fw-bold lh-1"><span data-count="5">5</span>+</div><div class="lbl fs-6">Proyek selesai</div></div></div></div>
-        <div class="col"><div class="stat d-flex align-items-center gap-3 h-100 p-3 rounded-4"><i class="bi bi-clock-history fs-5 d-flex align-items-center justify-content-center flex-shrink-0 rounded-4"></i><div><div class="num fs-3 fw-bold lh-1"><span data-count="2">2</span>+</div><div class="lbl fs-6">Tahun pengalaman</div></div></div></div>
-        <div class="col"><div class="stat d-flex align-items-center gap-3 h-100 p-3 rounded-4"><i class="bi bi-stack fs-5 d-flex align-items-center justify-content-center flex-shrink-0 rounded-4"></i><div><div class="num fs-3 fw-bold lh-1"><span data-count="8">8</span></div><div class="lbl fs-6">Teknologi dikuasai</div></div></div></div>
-        <div class="col"><div class="stat d-flex align-items-center gap-3 h-100 p-3 rounded-4"><i class="bi bi-award fs-5 d-flex align-items-center justify-content-center flex-shrink-0 rounded-4"></i><div><div class="num fs-3 fw-bold lh-1"><span data-count="5">5</span></div><div class="lbl fs-6">Sertifikat &amp; lomba</div></div></div></div>
+        <div class="row g-4">
+          <div class="col-lg-5 reveal">
+            <div class="glass rounded-4 p-4 h-100">
+              <h3 class="fs-5 fw-bold mb-3">Latar Belakang</h3>
+              <p>Saya suka membangun sesuatu dari nol, lalu mengujinya sampai rusak. Dari situ saya belajar dua hal sekaligus: cara membuat aplikasi web, dan cara orang lain membobolnya.</p>
+              <p class="mb-0">Ganti paragraf ini dengan ceritamu: sekolah atau kampus, apa yang memulai minatmu, dan apa yang sedang kamu pelajari sekarang.</p>
+              <ol class="tl list-unstyled position-relative ps-4 mt-4 mb-0">
+                <li class="position-relative pb-3" data-side="dev">
+                  <span class="d-block fw-semibold">Mulai dari developer</span>
+                  <span class="small text-body-secondary">Belajar HTML, CSS, dan PHP, lalu membangun proyek pertama dari nol.</span>
+                </li>
+                <li class="position-relative pb-3" data-side="hack">
+                  <span class="d-block fw-semibold">Mengenal sisi hacker</span>
+                  <span class="small text-body-secondary">Penasaran bagaimana aplikasi dibobol, lalu belajar Linux, CTF, dan keamanan web.</span>
+                </li>
+                <li class="position-relative" data-side="both">
+                  <span class="d-block fw-semibold">Sekarang</span>
+                  <span class="small text-body-secondary">Membangun aplikasi sambil mengujinya sendiri sebelum dirilis.</span>
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="col-lg-7 reveal">
+            <div class="glass rounded-4 p-4 h-100">
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                <h3 class="fs-5 fw-bold mb-0">Tech Stack</h3>
+                <div class="filter pill rounded-pill d-flex gap-1 p-1" role="group" aria-label="Filter sisi">
+                  <button class="px-3 py-1 rounded-pill border-0 small fw-medium" type="button" data-f="all" aria-pressed="true">Semua</button>
+                  <button class="px-3 py-1 rounded-pill border-0 small fw-medium" type="button" data-f="dev" aria-pressed="false">Developer</button>
+                  <button class="px-3 py-1 rounded-pill border-0 small fw-medium" type="button" data-f="hack" aria-pressed="false">Hacker</button>
+                </div>
+              </div>
+              <div class="stack" id="stack" data-filter="all">
+            <div class="mb-3">
+              <div class="group-label small fw-semibold text-uppercase mb-2">Bahasa Pemrograman</div>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-filetype-php fs-6"></i>PHP</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-filetype-js fs-6"></i>JavaScript</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="both"><i class="bi bi-filetype-py fs-6"></i>Python</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-filetype-sql fs-6"></i>SQL</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-filetype-html fs-6"></i>HTML &amp; CSS</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-terminal fs-6"></i>Bash</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="group-label small fw-semibold text-uppercase mb-2">Framework &amp; Library</div>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-braces fs-6"></i>Framework PHP buatan sendiri</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-bootstrap fs-6"></i>Bootstrap</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-wind fs-6"></i>Tailwind CSS</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="group-label small fw-semibold text-uppercase mb-2">Tools Harian</div>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="both"><i class="bi bi-git fs-6"></i>Git &amp; GitHub</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-code-slash fs-6"></i>VS Code</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="both"><i class="bi bi-cpu fs-6"></i>Linux</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="group-label small fw-semibold text-uppercase mb-2">Sisi Hacker</div>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-hdd-network fs-6"></i>Nmap</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-bug fs-6"></i>Burp Suite</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-activity fs-6"></i>Wireshark</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-shield-lock fs-6"></i>OWASP Top 10</span>
+                <span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-flag fs-6"></i>CTF</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+    </section>
+
+    <section class="projects py-5" id="proyek">
+      <div class="container">
+        <div class="reveal d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+          <div>
+            <p class="eyebrow small fw-semibold text-uppercase mb-1">Proyek Unggulan</p>
+            <h2 class="fs-1 fw-bold lh-1 mb-0">Karya Pilihan</h2>
+          </div>
+          <a class="view-all pill rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2 text-decoration-none text-reset fw-medium small" href="#">Lihat Semua Proyek <i class="bi bi-arrow-up-right"></i></a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+          <div class="col reveal">
+            <a class="project d-block position-relative rounded-4 overflow-hidden text-decoration-none text-reset" href="#" style="--a:#ff0000;--b:#ffff00">
+              <div class="ratio ratio-4x3"><div class="canvas"><div class="mock"></div></div></div>
+              <!-- <div class="ratio ratio-4x3">
+                <div class="canvas">
+                  <img src="img/absensi-pkl.jpg" alt="Tampilan Web Absensi PKL" class="w-100 h-100 object-fit-cover" loading="lazy">
+                </div>
+              </div> -->
+              <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
+                <div>
+                  <div class="fw-semibold lh-sm">Web Absensi PKL</div>
+                  <div class="cat small">Aplikasi Web</div>
+                </div>
+                <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
+              </div>
+            </a>
+          </div>
+          <div class="col reveal">
+            <a class="project d-block position-relative rounded-4 overflow-hidden text-decoration-none text-reset" href="#" style="--a:#ffff00;--b:#00ff00">
+              <div class="ratio ratio-4x3"><div class="canvas"><div class="mock"></div></div></div>
+              <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
+                <div>
+                  <div class="fw-semibold lh-sm">Framework PHP Custom</div>
+                  <div class="cat small">Framework Backend</div>
+                </div>
+                <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
+              </div>
+            </a>
+          </div>
+          <div class="col reveal">
+            <a class="project d-block position-relative rounded-4 overflow-hidden text-decoration-none text-reset" href="#" style="--a:#00ff00;--b:#0000ff">
+              <div class="ratio ratio-4x3"><div class="canvas"><div class="mock"></div></div></div>
+              <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
+                <div>
+                  <div class="fw-semibold lh-sm">Nama Proyek 3</div>
+                  <div class="cat small">Alat Keamanan</div>
+                </div>
+                <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
+              </div>
+            </a>
+          </div>
+          <div class="col reveal">
+            <a class="project d-block position-relative rounded-4 overflow-hidden text-decoration-none text-reset" href="#" style="--a:#0000ff;--b:#ff00ff">
+              <div class="ratio ratio-4x3"><div class="canvas"><div class="mock"></div></div></div>
+              <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
+                <div>
+                  <div class="fw-semibold lh-sm">Nama Proyek 4</div>
+                  <div class="cat small">Desain Web</div>
+                </div>
+                <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
+    </section>
+    <section class="certs py-5" id="sertifikat">
+      <div class="container">
+        <div class="reveal d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+          <div>
+            <p class="eyebrow small fw-semibold text-uppercase mb-1">Sertifikat</p>
+            <h2 class="fs-1 fw-bold lh-1 mb-0">Bukti Belajar</h2>
+          </div>
+          <div class="small d-flex gap-3 text-body-secondary">
+            <span><i class="bi bi-circle-fill small" style="color:var(--hl)"></i> Developer</span>
+            <span><i class="bi bi-circle-fill small" style="color:var(--gr)"></i> Hacker</span>
+          </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+          <div class="col reveal">
+            <a class="cert d-block position-relative overflow-hidden rounded-4 p-4 text-decoration-none text-reset" data-side="dev" href="img/sertifikat-1.jpg">
+              <div class="d-flex justify-content-between align-items-start mb-4">
+                <span class="cert-seal d-flex align-items-center justify-content-center rounded-circle"><i class="bi bi-patch-check-fill fs-4"></i></span>
+                <span class="cert-tag small text-uppercase fw-semibold">Developer</span>
+              </div>
+              <h3 class="fs-6 fw-semibold lh-sm mb-1">Web Development Dasar</h3>
+              <p class="small text-body-secondary mb-3">Nama Penerbit &middot; 20XX</p>
+              <div class="cert-id small font-monospace pt-3 d-flex justify-content-between align-items-center"><span>ID: XXXX-0001</span><i class="bi bi-zoom-in"></i></div>
+            </a>
+          </div>
+          <div class="col reveal">
+            <a class="cert d-block position-relative overflow-hidden rounded-4 p-4 text-decoration-none text-reset" data-side="dev" href="img/sertifikat-2.jpg">
+              <div class="d-flex justify-content-between align-items-start mb-4">
+                <span class="cert-seal d-flex align-items-center justify-content-center rounded-circle"><i class="bi bi-patch-check-fill fs-4"></i></span>
+                <span class="cert-tag small text-uppercase fw-semibold">Developer</span>
+              </div>
+              <h3 class="fs-6 fw-semibold lh-sm mb-1">PHP &amp; MySQL</h3>
+              <p class="small text-body-secondary mb-3">Nama Penerbit &middot; 20XX</p>
+              <div class="cert-id small font-monospace pt-3 d-flex justify-content-between align-items-center"><span>ID: XXXX-0002</span><i class="bi bi-zoom-in"></i></div>
+            </a>
+          </div>
+          <div class="col reveal">
+            <a class="cert d-block position-relative overflow-hidden rounded-4 p-4 text-decoration-none text-reset" data-side="hack" href="img/sertifikat-3.jpg">
+              <div class="d-flex justify-content-between align-items-start mb-4">
+                <span class="cert-seal d-flex align-items-center justify-content-center rounded-circle"><i class="bi bi-patch-check-fill fs-4"></i></span>
+                <span class="cert-tag small text-uppercase fw-semibold">Hacker</span>
+              </div>
+              <h3 class="fs-6 fw-semibold lh-sm mb-1">Pengantar Keamanan Siber</h3>
+              <p class="small text-body-secondary mb-3">Nama Penerbit &middot; 20XX</p>
+              <div class="cert-id small font-monospace pt-3 d-flex justify-content-between align-items-center"><span>ID: XXXX-0003</span><i class="bi bi-zoom-in"></i></div>
+            </a>
+          </div>
+        </div>
+        <dialog class="cert-dialog rounded-4 p-0" id="certDialog" aria-labelledby="certTitle">
+          <div class="p-3 p-md-4">
+            <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+              <div>
+                <p class="cert-tag small text-uppercase fw-semibold mb-1" id="certTag"></p>
+                <h3 class="fs-5 fw-bold mb-1" id="certTitle"></h3>
+                <p class="small text-body-secondary mb-0"><span id="certMeta"></span> &middot; <span class="font-monospace" id="certId"></span></p>
+              </div>
+              <button class="soc flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle bg-transparent text-reset" id="certClose" type="button" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="cert-view rounded-3 overflow-hidden">
+              <img class="w-100" id="certImg" alt="">
+              <div class="cert-fallback text-center p-4" id="certFallback" hidden>
+                <i class="bi bi-image fs-1 mb-2"></i>
+                <p class="mb-1 fw-semibold">Gambar sertifikat belum tersedia</p>
+                <p class="small text-body-secondary mb-0">Taruh gambarnya di <code id="certPath"></code></p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between gap-3 mt-3">
+              <div class="d-flex align-items-center gap-2">
+                <button class="soc d-flex align-items-center justify-content-center rounded-circle bg-transparent text-reset" id="certPrev" type="button" aria-label="Sebelumnya"><i class="bi bi-chevron-left"></i></button>
+                <span class="small font-monospace text-body-secondary" id="certCount"></span>
+                <button class="soc d-flex align-items-center justify-content-center rounded-circle bg-transparent text-reset" id="certNext" type="button" aria-label="Berikutnya"><i class="bi bi-chevron-right"></i></button>
+              </div>
+              <a class="small text-decoration-none text-reset" id="certOpen" href="#" target="_blank" rel="noopener">Buka gambar penuh <i class="bi bi-box-arrow-up-right"></i></a>
+            </div>
+          </div>
+        </dialog>
+      </div>
+    </section>
+
+    <section class="contact position-relative py-5" id="kontak">
+      <div class="container position-relative">
+        <div class="reveal mb-4">
+          <p class="eyebrow small fw-semibold text-uppercase mb-1">Kontak</p>
+          <h2 class="fs-1 fw-bold lh-1 mb-2">Ayo Ngobrol</h2>
+          <p class="text-body-secondary mb-0">Punya proyek, ingin berkolaborasi, atau menemukan bug di salah satu proyekku? Kirim pesan.</p>
+        </div>
+        <div class="row g-4">
+          <div class="col-lg-7 reveal">
+            <form class="glass rounded-4 p-4 h-100" id="contactForm" data-tone="dev" autocomplete="off">
+              <h3 class="fs-5 fw-bold mb-3">Kirim Pesan</h3>
+              <div class="filter pill rounded-pill d-flex flex-wrap gap-1 p-1 mb-3" role="group" aria-label="Topik pesan">
+                <button class="px-3 py-1 rounded-pill border-0 small fw-medium" type="button" data-t="Proyek" data-f="dev" aria-pressed="true">Proyek</button>
+                <button class="px-3 py-1 rounded-pill border-0 small fw-medium" type="button" data-t="Bug &amp; Keamanan" data-f="hack" aria-pressed="false">Bug &amp; Keamanan</button>
+                <button class="px-3 py-1 rounded-pill border-0 small fw-medium" type="button" data-t="Lainnya" aria-pressed="false">Lainnya</button>
+              </div>
+              <label class="form-label small" for="nama">Nama</label>
+              <input class="form-control rounded-3 mb-3" id="nama" name="nama" placeholder="Nama kamu" required>
+              <label class="form-label small" for="pesan">Pesan</label>
+              <textarea class="form-control rounded-3 mb-3" id="pesan" name="pesan" rows="4" placeholder="Tulis pesanmu di sini" required></textarea>
+              <button class="btn btn-send rounded-pill px-4 py-2 fw-medium d-inline-flex align-items-center gap-2" type="submit">Kirim lewat Email <i class="bi bi-send"></i></button>
+            </form>
+          </div>
+          <div class="col-lg-5 reveal">
+            <div class="glass rounded-4 p-4 h-100 d-flex flex-column">
+              <h3 class="fs-5 fw-bold mb-3">Info Kontak</h3>
+              <ul class="list-unstyled font-monospace small mb-4">
+                <li class="info-row d-flex justify-content-between align-items-center gap-3 py-2">
+                  <span class="text-body-secondary">email</span>
+                  <span class="d-flex align-items-center gap-2">
+                    <span class="text-break">dhimasindramaulana@gmail.com</span>
+                    <button class="btn btn-sm rounded-pill border px-2 py-0" id="copyMail" type="button" aria-label="Salin email">
+                      <i class="bi bi-clipboard"></i>
+                      <span>Salin</span>
+                    </button>
+                  </span>
+                </li>
+                <li class="info-row d-flex justify-content-between gap-3 py-2">
+                  <span class="text-body-secondary">status</span>
+                  <span><span class="pr">&#9679;</span> terbuka untuk magang &amp; freelance</span>
+                </li>
+                <li class="info-row d-flex justify-content-between gap-3 py-2">
+                  <span class="text-body-secondary">balasan</span>
+                  <span>biasanya 1&ndash;2 hari</span>
+                </li>
+                <li class="d-flex justify-content-between gap-3 py-2">
+                  <span class="text-body-secondary">waktu</span>
+                  <span id="clock">--:-- WIB</span>
+                </li>
+              </ul>
+              <p class="group-label small fw-semibold text-uppercase mb-2">Mau bahas apa?</p>
+              <div class="d-flex flex-wrap gap-2 mb-4">
+                <button class="quick d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small bg-transparent" type="button" data-f="dev" data-t="Proyek" data-msg="Halo, aku ingin mengajak kolaborasi untuk "><i class="bi bi-people"></i>Ajak kolaborasi</button>
+                <button class="quick d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small bg-transparent" type="button" data-f="dev" data-t="Proyek" data-msg="Halo, kami ingin menawarkan kesempatan magang/kerja untuk "><i class="bi bi-briefcase"></i>Tawaran magang</button>
+                <button class="quick d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small bg-transparent" type="button" data-f="hack" data-t="Bug &amp; Keamanan" data-msg="Halo, aku menemukan celah/bug di "><i class="bi bi-bug"></i>Lapor bug</button>
+                <button class="quick d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small bg-transparent" type="button" data-t="Lainnya" data-msg="Halo, aku ingin bertanya tentang "><i class="bi bi-chat-dots"></i>Tanya-tanya</button>
+              </div>
+              <div class="d-flex gap-2 mt-auto">
+                <a class="soc d-flex align-items-center justify-content-center rounded-circle text-decoration-none text-reset fs-5" href="https://github.com/yoksipmksi" target="_blank" rel="noopener" aria-label="GitHub"><i class="bi bi-github"></i></a>
+                <a class="soc d-flex align-items-center justify-content-center rounded-circle text-decoration-none text-reset fs-5" href="https://instagram.com/y_oksipmksi" target="_blank" rel="noopener" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                <a class="soc d-flex align-items-center justify-content-center rounded-circle text-decoration-none text-reset fs-5" href="mailto:dhimasindramaulana@gmail.com" aria-label="Email"><i class="bi bi-envelope-fill"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer border-top">
+    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3 py-4">
+      <span class="small text-body-secondary">&copy; <span id="year">2026</span> yoksipmksi. Dibuat dengan pecut sakti.</span>
+      <span class="font-monospace small d-none d-md-inline"><span class="pr">$</span> echo "terima kasih sudah mampir"<span class="cur"></span></span>
+      <a class="top-btn pill rounded-circle d-flex align-items-center justify-content-center text-decoration-none text-reset" href="#beranda" aria-label="Kembali ke atas"><i class="bi bi-arrow-up"></i></a>
     </div>
-  </section>
+  </footer>
 
-  <section class="about position-relative py-5" id="tentang">
-    <div class="container position-relative">
-      <div class="reveal mb-4">
-        <p class="eyebrow small fw-semibold text-uppercase mb-1">Tentang Saya</p>
-        <h2 class="fs-1 fw-bold lh-1 mb-0">Dua Sisi, Satu Orang</h2>
-      </div>
+  <script src="js/navbar.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/navbar-sync.js"></script>
+  <script src="js/hero-tabs.js"></script>
+  <script src="js/stats-counter.js"></script>
+  <script src="js/hero-dock.js"></script>
+  <script src="js/parallax.js"></script>
+  <script src="js/reveal.js"></script>
+  <script src="js/tech-filter.js"></script>
+  <script src="js/cert-tilt.js"></script>
+  <script src="js/contact-form.js"></script>
+  <script src="js/footer.js"></script>
+  <script src="js/contact-info.js"></script>
+  <script src="js/cert-dialog.js"></script>
 
-      <div class="row g-4">
-        <div class="col-lg-5 reveal">
-          <div class="glass rounded-4 p-4 h-100">
-            <h3 class="fs-5 fw-bold mb-3">Latar Belakang</h3>
-            <p>Saya suka membangun sesuatu dari nol, lalu mengujinya sampai rusak. Dari situ saya belajar dua hal sekaligus: cara membuat aplikasi web, dan cara orang lain membobolnya.</p>
-            <p class="mb-0">Ganti paragraf ini dengan ceritamu: sekolah atau kampus, apa yang memulai minatmu, dan apa yang sedang kamu pelajari sekarang.</p>
-            <ol class="tl list-unstyled position-relative ps-4 mt-4 mb-0">
-              <li class="position-relative pb-3" data-side="dev"><span class="d-block fw-semibold">Mulai dari developer</span><span class="small text-body-secondary">Belajar HTML, CSS, dan PHP, lalu membangun proyek pertama dari nol.</span></li>
-              <li class="position-relative pb-3" data-side="hack"><span class="d-block fw-semibold">Mengenal sisi hacker</span><span class="small text-body-secondary">Penasaran bagaimana aplikasi dibobol, lalu belajar Linux, CTF, dan keamanan web.</span></li>
-              <li class="position-relative" data-side="both"><span class="d-block fw-semibold">Sekarang</span><span class="small text-body-secondary">Membangun aplikasi sambil mengujinya sendiri sebelum dirilis.</span></li>
-            </ol>
-          </div>
-        </div>
-
-        <div class="col-lg-7 reveal">
-          <div class="glass rounded-4 p-4 h-100">
-            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
-              <h3 class="fs-5 fw-bold mb-0">Tech Stack</h3>
-              <div class="filter pill rounded-pill d-flex gap-1 p-1" role="group" aria-label="Filter sisi">
-                <button class="px-3 py-1 rounded-pill border-0 small fw-medium" type="button" data-f="all" aria-pressed="true">Semua</button>
-                <button class="px-3 py-1 rounded-pill border-0 small fw-medium" type="button" data-f="dev" aria-pressed="false">Developer</button>
-                <button class="px-3 py-1 rounded-pill border-0 small fw-medium" type="button" data-f="hack" aria-pressed="false">Hacker</button>
-              </div>
-            </div>
-            <div class="stack" id="stack" data-filter="all">
-          <div class="mb-3">
-            <div class="group-label small fw-semibold text-uppercase mb-2">Bahasa Pemrograman</div>
-            <div class="d-flex flex-wrap gap-2"><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-filetype-php fs-6"></i>PHP</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-filetype-js fs-6"></i>JavaScript</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="both"><i class="bi bi-filetype-py fs-6"></i>Python</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-filetype-sql fs-6"></i>SQL</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-filetype-html fs-6"></i>HTML &amp; CSS</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-terminal fs-6"></i>Bash</span></div>
-          </div>
-          <div class="mb-3">
-            <div class="group-label small fw-semibold text-uppercase mb-2">Framework &amp; Library</div>
-            <div class="d-flex flex-wrap gap-2"><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-braces fs-6"></i>Framework PHP buatan sendiri</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-bootstrap fs-6"></i>Bootstrap</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-wind fs-6"></i>Tailwind CSS</span></div>
-          </div>
-          <div class="mb-3">
-            <div class="group-label small fw-semibold text-uppercase mb-2">Tools Harian</div>
-            <div class="d-flex flex-wrap gap-2"><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="both"><i class="bi bi-git fs-6"></i>Git &amp; GitHub</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="dev"><i class="bi bi-code-slash fs-6"></i>VS Code</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="both"><i class="bi bi-cpu fs-6"></i>Linux</span></div>
-          </div>
-          <div class="mb-3">
-            <div class="group-label small fw-semibold text-uppercase mb-2">Sisi Hacker</div>
-            <div class="d-flex flex-wrap gap-2"><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-hdd-network fs-6"></i>Nmap</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-bug fs-6"></i>Burp Suite</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-activity fs-6"></i>Wireshark</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-shield-lock fs-6"></i>OWASP Top 10</span><span class="chip d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill small" data-side="hack"><i class="bi bi-flag fs-6"></i>CTF</span></div>
-          </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="projects py-5" id="proyek">
-    <div class="container">
-      <div class="reveal d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
-        <div>
-          <p class="eyebrow small fw-semibold text-uppercase mb-1">Proyek Unggulan</p>
-          <h2 class="fs-1 fw-bold lh-1 mb-0">Karya Pilihan</h2>
-        </div>
-        <a class="view-all pill rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2 text-decoration-none text-reset fw-medium small" href="#">Lihat Semua Proyek <i class="bi bi-arrow-up-right"></i></a>
-      </div>
-
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-        <div class="col reveal">
-          <a class="project d-block position-relative rounded-4 overflow-hidden text-decoration-none text-reset" href="#" style="--a:#7c5cff;--b:#38bdf8">
-            <div class="ratio ratio-4x3"><div class="canvas"><div class="mock"></div></div></div>
-            <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
-              <div>
-                <div class="fw-semibold lh-sm">Web Absensi PKL</div>
-                <div class="cat small">Aplikasi Web</div>
-              </div>
-              <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
-            </div>
-          </a>
-        </div>
-        <div class="col reveal">
-          <a class="project d-block position-relative rounded-4 overflow-hidden text-decoration-none text-reset" href="#" style="--a:#6366f1;--b:#a78bfa">
-            <div class="ratio ratio-4x3"><div class="canvas"><div class="mock"></div></div></div>
-            <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
-              <div>
-                <div class="fw-semibold lh-sm">Framework PHP Custom</div>
-                <div class="cat small">Framework Backend</div>
-              </div>
-              <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
-            </div>
-          </a>
-        </div>
-        <div class="col reveal">
-          <a class="project d-block position-relative rounded-4 overflow-hidden text-decoration-none text-reset" href="#" style="--a:#0ea5e9;--b:#22d3ee">
-            <div class="ratio ratio-4x3"><div class="canvas"><div class="mock"></div></div></div>
-            <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
-              <div>
-                <div class="fw-semibold lh-sm">Nama Proyek 3</div>
-                <div class="cat small">Alat Keamanan</div>
-              </div>
-              <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
-            </div>
-          </a>
-        </div>
-        <div class="col reveal">
-          <a class="project d-block position-relative rounded-4 overflow-hidden text-decoration-none text-reset" href="#" style="--a:#14b8a6;--b:#4ade80">
-            <div class="ratio ratio-4x3"><div class="canvas"><div class="mock"></div></div></div>
-            <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
-              <div>
-                <div class="fw-semibold lh-sm">Nama Proyek 4</div>
-                <div class="cat small">Desain Web</div>
-              </div>
-              <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
-            </div>
-          </a>
-        </div>
-        <div class="col reveal">
-          <a class="project d-block position-relative rounded-4 overflow-hidden text-decoration-none text-reset" href="#" style="--a:#f59e0b;--b:#f43f5e">
-            <div class="ratio ratio-4x3"><div class="canvas"><div class="mock"></div></div></div>
-            <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
-              <div>
-                <div class="fw-semibold lh-sm">Nama Proyek 5</div>
-                <div class="cat small">Aplikasi Mobile</div>
-              </div>
-              <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
-            </div>
-          </a>
-        </div>
-        <div class="col reveal">
-          <a class="project d-block position-relative rounded-4 overflow-hidden text-decoration-none text-reset" href="#" style="--a:#3b82f6;--b:#8b5cf6">
-            <div class="ratio ratio-4x3"><div class="canvas"><div class="mock"></div></div></div>
-            <div class="info position-absolute start-0 end-0 bottom-0 m-2 p-3 rounded-4 d-flex align-items-center justify-content-between gap-3">
-              <div>
-                <div class="fw-semibold lh-sm">Nama Proyek 6</div>
-                <div class="cat small">Aplikasi Web</div>
-              </div>
-              <span class="arrow rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"><i class="bi bi-arrow-up-right"></i></span>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-
-<script>
-(() => {
-  const root = document.documentElement;
-  const bar = document.getElementById('topbar');
-  const hotZone = document.getElementById('hotZone');
-  const themeBtn = document.getElementById('themeBtn');
-  const canHover = window.matchMedia('(hover: hover)').matches;
-  const TOP_EDGE = 40;    // px dari atas layar yang memicu bar muncul
-  const MIN_SCROLL = 80;  // bar baru boleh hilang setelah scroll sejauh ini
-  let lastY = window.scrollY;
-  let hideTimer;
-  let hovering = false;   // true selama kursor berada di atas navbar
-
-  /* ----- Auto-hide ----- */
-  const show = () => { clearTimeout(hideTimer); bar.classList.remove('is-hidden'); };
-  const hide = () => {
-    if (hovering) return;   // jangan hilang selagi kursor masih di navbar
-    if (window.scrollY > MIN_SCROLL) bar.classList.add('is-hidden');
-  };
-
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    if (y <= MIN_SCROLL) show();
-    else if (y > lastY) hide();
-    else if (!canHover) show();      // layar sentuh: muncul saat scroll ke atas
-    lastY = y;
-  }, { passive: true });
-
-  hotZone.addEventListener('mouseenter', show);
-  document.addEventListener('mousemove', e => { if (e.clientY <= TOP_EDGE) show(); });
-  bar.addEventListener('mouseenter', () => { hovering = true; show(); });
-  bar.addEventListener('mouseleave', () => {
-    hovering = false;
-    clearTimeout(hideTimer);
-    hideTimer = setTimeout(hide, 700);   // hilang setelah kursor pergi
-  });
-  bar.addEventListener('focusin', show);
-
-  /* ----- Tema gelap / terang ----- */
-  const updateLabel = () => {
-    const dark = root.getAttribute('data-bs-theme') === 'dark';
-    themeBtn.setAttribute('aria-label', dark ? 'Ganti ke tema terang' : 'Ganti ke tema gelap');
-  };
-  updateLabel();
-
-  themeBtn.addEventListener('click', () => {
-    const next = root.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-bs-theme', next);
-    try { localStorage.setItem('tema', next); } catch (e) {}
-    updateLabel();
-  });
-})();
-</script>
-<script>
-(() => {
-  const hero = document.getElementById('beranda');
-  const tabs = [...hero.querySelectorAll('[role="tab"]')];
-  const panels = { dev: document.getElementById('panel-dev'), hack: document.getElementById('panel-hack') };
-  const titles = { dev: 'dev.js', hack: 'zsh — root@portfolio' };
-  const title = document.getElementById('winTitle');
-  const bar = document.getElementById('topbar');
-  const syncBar = () => {   // navbar ikut hijau selama hero hacker masih di belakangnya
-    const over = hero.dataset.mode === 'hack' && hero.getBoundingClientRect().bottom > 70;
-    bar.dataset.over = over ? 'hack' : '';
-  };
-  window.addEventListener('scroll', syncBar, { passive: true });
-
-  Object.values(panels).forEach(p => p.querySelectorAll('.l').forEach((l, i) => l.style.setProperty('--i', i)));
-
-  function setMode(m) {
-    hero.dataset.mode = m;
-    tabs.forEach(t => {
-      const on = t.dataset.mode === m;
-      t.setAttribute('aria-selected', on);
-      t.tabIndex = on ? 0 : -1;
-    });
-    Object.entries(panels).forEach(([k, p]) => { p.hidden = k !== m; });
-    title.textContent = titles[m];
-    syncBar();
-    const p = panels[m];                       // putar ulang animasi baris
-    p.classList.remove('play'); void p.offsetWidth; p.classList.add('play');
-  }
-
-  tabs.forEach((t, i) => {
-    t.addEventListener('click', () => setMode(t.dataset.mode));
-    t.addEventListener('keydown', e => {
-      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      const n = tabs[(i + 1) % tabs.length];
-      n.focus(); setMode(n.dataset.mode);
-    });
-  });
-  setMode('dev');
-
-  const mobile = matchMedia('(max-width: 767.98px)');   // tab disembunyikan di mobile -> kembali ke developer
-  mobile.addEventListener('change', e => { if (e.matches) setMode('dev'); });
-
-  /* Angka statistik naik dari 0 */
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll('[data-count]').forEach(el => {
-      const to = +el.dataset.count, t0 = performance.now();
-      const tick = t => {
-        const k = Math.min((t - t0) / 1200, 1);
-        el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3)));
-        if (k < 1) requestAnimationFrame(tick);
-      };
-      el.textContent = 0; requestAnimationFrame(tick);
-    });
-  }
-
-  /* Dock: ikon membesar sesuai jarak kursor */
-  const dock = document.getElementById('dock');
-  const items = [...dock.querySelectorAll('a')];
-  if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    dock.addEventListener('mousemove', e => items.forEach(a => {
-      const r = a.getBoundingClientRect();
-      const d = Math.abs(e.clientX - (r.left + r.width / 2));
-      a.style.setProperty('--s', 1 + .2 * Math.max(0, 1 - d / 90));
-    }));
-    dock.addEventListener('mouseleave', () => items.forEach(a => a.style.setProperty('--s', 1)));
-  }
-})();
-</script>
-<script>
-/* Parallax scroll: glow hero + card kanan bergerak beda kecepatan, mockup proyek bergeser di dalam card */
-(() => {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const root = document.documentElement;
-  const cards = [...document.querySelectorAll('.project')];
-  let ticking = false;
-
-  const update = () => {
-    const vh = innerHeight;
-    root.style.setProperty('--sy', Math.min(scrollY, vh));       // hero: berhenti setelah 1 layar
-    cards.forEach(c => {
-      const r = c.getBoundingClientRect();
-      const p = r.top + r.height / 2 - vh / 2;                   // jarak card dari tengah layar
-      c.style.setProperty('--p', Math.max(-300, Math.min(300, p)));
-    });
-    ticking = false;
-  };
-  addEventListener('scroll', () => {
-    if (!ticking) { ticking = true; requestAnimationFrame(update); }
-  }, { passive: true });
-  addEventListener('resize', update);
-  update();
-})();
-</script>
-<script>
-/* Scroll reveal: card proyek muncul bertahap saat masuk layar */
-(() => {
-  const items = document.querySelectorAll('.reveal');
-  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  window.__revealOK = true;
-  document.documentElement.classList.add('reveal-ready');
-
-  const io = new IntersectionObserver(entries => {
-    entries.filter(e => e.isIntersecting).forEach((e, i) => {
-      e.target.style.transitionDelay = Math.min(i, 6) * 130 + 'ms';   // muncul berurutan
-      e.target.classList.add('is-visible');
-      io.unobserve(e.target);
-    });
-  }, { threshold: .15, rootMargin: '0px 0px -6% 0px' });
-
-  items.forEach(el => io.observe(el));
-})();
-</script>
-<script>
-/* Filter tech stack: sisi yang tidak dipilih meredup */
-(() => {
-  const stack = document.getElementById('stack');
-  const btns = [...document.querySelectorAll('.filter button')];
-  btns.forEach(b => b.addEventListener('click', () => {
-    stack.dataset.filter = b.dataset.f;
-    btns.forEach(x => x.setAttribute('aria-pressed', x === b));
-  }));
-})();
-</script>
 </body>
 </html>

@@ -1,0 +1,45 @@
+/* theme.css — Variabel tema terang/gelap + gaya dasar halaman */
+
+/* ---------- TEMA: putih (terang) & biru navy (gelap) ---------- */
+[data-bs-theme="light"] {
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #0b1b3d;
+  --muted: #55627f;
+  --accent: #14307a;
+  --accent-ink: #ffffff;
+  --line: #dde3f0;
+  --bar-bg: transparent;
+  --pill-bg: #ffffff;
+  --shadow: 0 4px 14px rgba(11, 27, 61, .1);
+}
+
+[data-bs-theme="dark"] {
+  --bs-body-bg: #0a0c21;
+  --bs-body-color: #e8ebfa;
+  --muted: #9aa3c7;
+  --accent: #8aa2ff;
+  --accent-ink: #0a0c21;
+  --line: #20264d;
+  --bar-bg: transparent;
+  --pill-bg: #141a3c;
+  --shadow: 0 4px 14px rgba(0, 0, 0, .45);
+}
+
+body {
+  transition: background-color .3s, color .3s;
+}
+
+h1,
+.brand {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}

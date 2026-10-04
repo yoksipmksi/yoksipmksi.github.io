@@ -1,0 +1,72 @@
+/* sections.css — Warna aksen per section (ungu = developer, hijau = hacker), judul, glow latar */
+
+[data-bs-theme="light"] .projects,
+[data-bs-theme="light"] .about,
+[data-bs-theme="light"] .certs,
+[data-bs-theme="light"] .contact {
+    --hl: #6d28d9;
+    --gr: #15803d;
+}
+
+[data-bs-theme="dark"] .projects,
+[data-bs-theme="dark"] .about,
+[data-bs-theme="dark"] .certs,
+[data-bs-theme="dark"] .contact {
+    --hl: #9b6bff;
+    --gr: #4ade80;
+}
+
+.projects h2,
+.about h2,
+.certs h2,
+.contact h2 {
+    font-family: "Poppins", system-ui, sans-serif;
+    letter-spacing: -.02em;
+}
+
+.eyebrow {
+    color: var(--hl);
+    letter-spacing: .08em;
+}
+
+.about,
+.contact {
+    overflow-x: clip;
+}
+
+.about::before,
+.about::after,
+.contact::before,
+.contact::after {
+    content: "";
+    position: absolute;
+    width: min(480px, 70vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.about::before,
+.contact::before {
+    left: -12%;
+    top: 4%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--hl) 35%, transparent), transparent);
+}
+
+.about::after,
+.contact::after {
+    right: -12%;
+    bottom: 0;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--gr) 30%, transparent), transparent);
+}
+
+html {
+    --gr: #15803d;
+    --hl: #6d28d9;
+}
+
+[data-bs-theme="dark"] .footer,
+[data-bs-theme="dark"] .contact {
+    --gr: #4ade80;
+    --hl: #9b6bff;
+}

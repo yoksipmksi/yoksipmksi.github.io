@@ -1,0 +1,12 @@
+/* layout-mobile.css — Penyesuaian mobile yang harus dimuat setelah hero (padding atas) */
+
+/* mobile: bar navbar dua baris lebih tinggi, jadi beri ruang lebih di atas */
+@media (max-width: 767.98px) {
+  .hero {
+    padding-top: 9.5rem;
+  }
+
+  html {
+    scroll-padding-top: 9.5rem;
+  }
+}

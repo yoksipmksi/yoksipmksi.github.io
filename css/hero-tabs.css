@@ -1,0 +1,26 @@
+/* hero-tabs.css — Hero: tombol tab Developer/Hacker */
+
+/* tombol tab */
+.controls {
+    width: fit-content;
+}
+
+.vsep {
+    width: 1px;
+    background: var(--line);
+}
+
+.tabs button {
+    background: transparent;
+    color: var(--muted);
+    transition: background .25s, color .25s;
+}
+
+.tabs button:not([aria-selected="true"]):hover {
+    color: var(--bs-body-color);
+}
+
+.tabs button[aria-selected="true"] {
+    background: var(--mode);
+    color: var(--mode-ink);
+}

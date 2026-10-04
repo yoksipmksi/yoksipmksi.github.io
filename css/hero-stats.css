@@ -1,0 +1,34 @@
+/* hero-stats.css — Hero: 4 card statistik */
+
+/* kartu statistik berlatar blur */
+.stat {
+  background: color-mix(in srgb, var(--bs-body-color) 6%, transparent);
+  border: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.stat i {
+  width: 44px;
+  height: 44px;
+  color: var(--hl);
+  background: color-mix(in srgb, var(--hl) 16%, transparent);
+}
+
+.stat .num {
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.stat .lbl {
+  color: var(--muted);
+}
+
+.stat {
+  transition: transform .25s ease, border-color .25s, box-shadow .25s;
+}
+
+.stat:hover {
+  transform: translateY(-3px) scale(1.03);
+  border-color: color-mix(in srgb, var(--hl) 55%, transparent);
+  box-shadow: 0 14px 30px -14px var(--glow);
+}

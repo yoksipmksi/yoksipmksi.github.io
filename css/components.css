@@ -1,0 +1,71 @@
+/* components.css — Komponen bersama: .pill, .glass (+warna tone), tombol filter, ikon sosial */
+
+.pill {
+  background: var(--pill-bg);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.glass {
+  background: color-mix(in srgb, var(--bs-body-color) 5%, transparent);
+  border: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  transition: border-color .4s, box-shadow .4s, background-color .4s;
+}
+
+.glass[data-tone="dev"] {
+  --tone: var(--hl);
+}
+
+.glass[data-tone="hack"] {
+  --tone: var(--gr);
+}
+
+.glass[data-tone="dev"],
+.glass[data-tone="hack"] {
+  border-color: color-mix(in srgb, var(--tone) 55%, transparent);
+  box-shadow: 0 0 44px -14px color-mix(in srgb, var(--tone) 55%, transparent);
+  background-color: color-mix(in srgb, var(--tone) 8%, color-mix(in srgb, var(--bs-body-color) 5%, transparent));
+}
+
+.filter button {
+  background: transparent;
+  color: var(--muted);
+  transition: background .25s, color .25s;
+}
+
+.filter button[aria-pressed="true"] {
+  background: var(--bs-body-color);
+  color: var(--bs-body-bg);
+}
+
+.filter button[data-f="dev"][aria-pressed="true"] {
+  background: var(--hl);
+  color: var(--bs-body-bg);
+}
+
+.filter button[data-f="hack"][aria-pressed="true"] {
+  background: var(--gr);
+  color: var(--bs-body-bg);
+}
+
+.group-label {
+  color: var(--muted);
+  letter-spacing: .08em;
+}
+
+.soc,
+.top-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  transition: background .2s, color .2s, border-color .2s;
+}
+
+.soc:hover,
+.top-btn:hover {
+  background: var(--hl);
+  border-color: var(--hl);
+  color: var(--bs-body-bg);
+}

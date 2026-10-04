@@ -1,0 +1,29 @@
+/* reduced-motion.css — Mode "kurangi animasi" (dimuat paling akhir) */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .panel.play .l,
+  .cur::after {
+    animation: none;
+  }
+
+  .dock a,
+  .stat {
+    transition: none;
+  }
+
+  .stat:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .topbar,
+  body {
+    transition: none;
+  }
+}

@@ -1,0 +1,66 @@
+/* terminal.css — Warna sintaks kode, kursor berkedip, titik status (dipakai hero, kontak, footer) */
+
+.k {
+    color: #c792ea;
+}
+
+.s {
+    color: #a5e8a0;
+}
+
+.n {
+    color: #ffb86c;
+}
+
+.p {
+    color: #82aaff;
+}
+
+.c {
+    color: #5b678f;
+    font-style: italic;
+}
+
+.o {
+    color: #f07178;
+}
+
+.g {
+    color: #4ade80;
+}
+
+.d {
+    color: #8c97c4;
+}
+
+.pr {
+    color: #4ade80;
+}
+
+.cur::after {
+    content: "";
+    display: inline-block;
+    width: .55em;
+    height: 1.1em;
+    margin-left: 2px;
+    background: #4ade80;
+    vertical-align: text-bottom;
+    animation: blink 1s steps(2) infinite;
+}
+
+@keyframes blink {
+    to {
+        opacity: 0;
+    }
+}
+
+.live::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: .5rem;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 8px #4ade80;
+}

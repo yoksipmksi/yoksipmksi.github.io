@@ -1,0 +1,45 @@
+/* hero-dock.css — Hero: dock ikon medsos */
+
+/* dock medsos: ikon membesar mengikuti kursor */
+.dock a {
+  --s: 1;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  color: var(--bs-body-color);
+  transform: scale(var(--s));
+  transform-origin: 50% 100%;
+  transition: transform .12s ease-out, background .2s, color .2s, border-color .2s;
+}
+
+.dock a:hover,
+.dock a:focus-visible {
+  background: var(--mode);
+  border-color: var(--mode);
+  color: var(--mode-ink);
+}
+
+.dock a::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: max-content;
+  padding: .2rem .6rem;
+  border-radius: 8px;
+  font-size: .75rem;
+  background: var(--bs-body-color);
+  color: var(--bs-body-bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s;
+  transform: scale(calc(1 / var(--s)));
+  transform-origin: 50% 100%;
+}
+
+.dock a:hover::after,
+.dock a:focus-visible::after {
+  opacity: 1;
+}

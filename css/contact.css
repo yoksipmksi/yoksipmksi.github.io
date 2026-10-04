@@ -1,0 +1,47 @@
+/* contact.css — Section Kontak: form, tombol kirim, info kontak */
+
+/* ---------- KONTAK + FOOTER ---------- */
+.contact .form-control:focus {
+  border-color: var(--tone, var(--hl));
+  box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--tone, var(--hl)) 25%, transparent);
+}
+
+.btn-send {
+  --bs-btn-bg: var(--tone, var(--hl));
+  --bs-btn-border-color: var(--tone, var(--hl));
+  --bs-btn-color: var(--bs-body-bg);
+  --bs-btn-hover-bg: color-mix(in srgb, var(--tone, var(--hl)) 85%, #000);
+  --bs-btn-hover-border-color: var(--tone, var(--hl));
+  --bs-btn-hover-color: var(--bs-body-bg);
+  --bs-btn-active-bg: var(--tone, var(--hl));
+  --bs-btn-active-color: var(--bs-body-bg);
+}
+
+.contact .filter {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.quick {
+  border: 1px solid var(--line);
+  color: inherit;
+  transition: border-color .2s, color .2s;
+}
+
+.quick[data-f="dev"]:hover {
+  border-color: var(--hl);
+  color: var(--hl);
+}
+
+.quick[data-f="hack"]:hover {
+  border-color: var(--gr);
+  color: var(--gr);
+}
+
+.quick:not([data-f]):hover {
+  border-color: var(--bs-body-color);
+}
+
+.info-row {
+  border-bottom: 1px dashed var(--line);
+}

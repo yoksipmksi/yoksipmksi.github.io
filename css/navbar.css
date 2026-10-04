@@ -1,0 +1,83 @@
+/* navbar.css — Navbar melayang: auto-hide, pill menu, tampilan mobile dua baris */
+
+/* ---------- TOPBAR (auto-hide) ---------- */
+.hot-zone {
+  height: 28px;
+  z-index: 1049;
+}
+
+/* latar blur selebar layar di belakang semua elemen navbar */
+.topbar {
+  z-index: 1050;
+  grid-template-columns: 1fr auto 1fr;
+  /* kiri | tengah | kanan */
+  background: var(--bar-bg);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid var(--line);
+  transition: transform .4s cubic-bezier(.2, .8, .2, 1), opacity .3s;
+}
+
+.topbar.is-hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* saat hero mode hacker ada di belakang navbar, warna navbar ikut hijau */
+.topbar[data-over="hack"] {
+  --bs-body-color: #d3f9e2;
+  --muted: #7fbf9f;
+  --line: rgba(74, 222, 128, .22);
+  --pill-bg: #0a2216;
+  --shadow: 0 4px 14px rgba(0, 0, 0, .4);
+}
+
+/* kiri: nama */
+.brand {
+  justify-self: start;
+  color: var(--bs-body-color);
+}
+
+/* tengah: menu */
+.nav-pill a {
+  color: var(--muted);
+  transition: background .2s, color .2s;
+}
+
+.nav-pill a:hover {
+  background: var(--line);
+  color: var(--bs-body-color);
+}
+
+@media (max-width: 575.98px) {
+  .nav-pill a {
+    font-size: .85rem;
+  }
+}
+
+/* mobile: baris atas = nama + tema, baris bawah = menu selebar layar */
+@media (max-width: 767.98px) {
+  .topbar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .topbar>nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .topbar .nav-pill {
+    width: 100%;
+    justify-content: space-between;
+    margin: 0 !important;
+  }
+
+  .topbar .nav-pill li {
+    flex: 1;
+  }
+
+  .topbar .nav-pill a {
+    text-align: center;
+  }
+}

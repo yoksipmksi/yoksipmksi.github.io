@@ -1,0 +1,55 @@
+/* certificates.css — Section Sertifikat: kartu dan popup (dialog) */
+
+/* ---------- SERTIFIKAT: kartu kredensial dengan efek miring + kilau mengikuti kursor ---------- */
+.cert {
+  --c: var(--hl); background: var(--pill-bg);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .2s ease, border-color .2s;
+}
+
+.cert[data-side="hack"] {
+  --c: var(--gr);
+}
+
+.cert::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none; transition: opacity .25s;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), color-mix(in srgb, var(--c) 32%, transparent), transparent 60%);
+}
+
+.cert::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto; height: 3px;
+  background: var(--c);
+}
+
+.cert:hover { border-color: var(--c); }
+.cert:hover::before { opacity: 1; }
+.cert-seal { width: 48px; height: 48px; color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); }
+.cert-tag { color: var(--c); letter-spacing: .08em; }
+.cert-id { color: var(--muted); border-top: 1px dashed var(--line); }
+
+/* popup sertifikat (elemen <dialog> bawaan browser) */
+.cert-dialog {
+  --tone: var(--hl); width: min(920px, calc(100% - 1.5rem)); max-height: calc(100vh - 1.5rem); overflow: auto;
+  background: var(--pill-bg); color: var(--bs-body-color);
+  border: 1px solid color-mix(in srgb, var(--tone) 55%, transparent);
+  box-shadow: 0 0 70px -12px color-mix(in srgb, var(--tone) 60%, transparent);
+}
+.cert-dialog[data-tone="hack"] { --tone: var(--gr); }
+.cert-dialog::backdrop { background: rgba(4, 7, 22, .65); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.cert-dialog .cert-tag { color: var(--tone); letter-spacing: .08em; }
+.cert-dialog .soc:hover { background: var(--tone); border-color: var(--tone); }
+.cert-view { background: color-mix(in srgb, var(--bs-body-color) 6%, transparent); border: 1px solid var(--line); }
+.cert-view img { display: block; max-height: calc(100vh - 16rem); object-fit: contain; }
+.cert-fallback { display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 4 / 3; max-height: calc(100vh - 16rem); width: 100%; color: var(--muted); border: 2px dashed var(--line); border-radius: inherit; }
+@media (prefers-reduced-motion: no-preference) {
+  .cert-dialog[open] { animation: dlg-in .3s ease; }
+  @keyframes dlg-in { from { opacity: 0; transform: translateY(16px) scale(.97); } }
+}
